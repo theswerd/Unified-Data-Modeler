@@ -1,5 +1,15 @@
-<script>
+<script lang="ts">
+    import { io } from "socket.io-client";
+
 	import successkid from 'images/successkid.jpg';
+import { onMount } from "svelte";
+	onMount(() => {
+        const socket = io();
+        socket.on("connection", () => {
+            console.log("revieved connection from socket");
+        });
+       
+    });
 </script>
 
 <style>

@@ -25,7 +25,14 @@ const io = new Server(httpServer, {
 
 io.on("connection", (socket) => {
 	console.log('CONNECTION')
+  socket.on('test', (_) => {
+    console.log('TEST')
+    socket.emit('ok', {'test':'test'})
+  });
 });
+
+
+
 httpServer.listen(PORT, () => {
   console.log("socket and sapper running");
 });

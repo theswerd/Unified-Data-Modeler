@@ -55,7 +55,7 @@
   let exportModel = () => {
     console.log("logggg");
     var blob = new Blob(["name: "+modelName+"\n"+"parameters:\n", parameters.map((value)=>{
-     return "\t- name: "+value.name+"\n\t  requried: "+value.required+"\n\t  type: "+value.type.value
+     return "\t- name: "+value.name+"\n\t  required: "+value.required+"\n\t  type: "+value.type.value
     }).join('\n')], {
       type: "text/plain;charset=utf-8",
     });
@@ -125,4 +125,11 @@
   input{
     text-transform: lowercase; 
   }
+  td {
+    text-align: center;
+  }
+  :global(body) {
+    font-family: 'Courier Prime', monospace;
+  }
+  
 </style>

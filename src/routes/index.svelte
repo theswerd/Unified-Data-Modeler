@@ -54,6 +54,7 @@
     <th> Required </th>
     <th> Type </th>
   </tr>
+  {#if parameters != null}
   {#each parameters as paramater, index}
     <tr>
       <td><input bind:value={paramater.name} /></td>
@@ -65,13 +66,15 @@
           bind:textContent={parameters[index].type.text}
           contenteditable
         >
-          {#each dataTypes ?? [] as type}
+		
+          {#each dataTypes as type}
             <option value={type.value}>{type.text}</option>
           {/each}
         </select></td
       >
     </tr>
   {/each}
+  {/if}
 </table>
 <button on:click={addParameter}>Add Parameter</button>
 

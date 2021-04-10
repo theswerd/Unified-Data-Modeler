@@ -121,7 +121,8 @@
 </svelte:head>
 <Nav />
 <table>
-  <tr><input placeholder="Model Name" bind:value={modelName} />
+  <tr>
+    <th colspan="3"><input placeholder="Model Name" bind:value={modelName} /></th>
   </tr>
   <tr>
     <th> Parameter </th>

@@ -5,3 +5,9 @@ export interface Parameter {
   type: DataType;
   required: boolean;
 }
+
+
+export interface BaseParameter {
+  type: string;
+  required: boolean;
+}

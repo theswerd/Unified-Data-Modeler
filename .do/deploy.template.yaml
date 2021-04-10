@@ -1,5 +1,5 @@
 spec:
- name: Unified Data Modeler
+ name: Unified-Data-Modeler
  services:
  - name: web
    git:

@@ -1,25 +1,21 @@
 <script lang="ts">
   import { io } from "socket.io-client";
+  import type {  Socket } from "socket.io-client";
+
   import dataTypes from "../models/data_types";
   import { onMount } from "svelte";
   import Nav from "../components/Nav.svelte";
   import type { Parameter } from "../models/parameter";
 
   let parameters: Array<Parameter> = [
-    {
-      name: "Name",
-      type: dataTypes[0],
-      required: true,
-    },
+    
   ];
+
+  let socket: Socket;
 
   onMount(() => {
     console.log("MOUNTED");
-    const socket = io();
-    socket.emit("test");
-    socket.on("ok", (args) => {
-      console.log("ok", args);
-    });
+    socket = io();
   });
 
   let addParameter = () => {
@@ -29,10 +25,11 @@
       type: dataTypes[0],
       required: true,
     });
-	parameters = parameters;
+    parameters = parameters;
   };
 
-  $: console.log(parameters)
+  $: socket?.emit("parameters", parameters);
+
 </script>
 
 <svelte:head>
@@ -47,10 +44,10 @@
   </tr>
   {#each parameters as paramater}
     <tr>
-      <td><input value={paramater.name} /></td>
-      <td><input checked={paramater.required} type="checkbox" /></td>
+      <td><input bind:value={paramater.name}/></td>
+      <td><input bind:checked={paramater.required} type="checkbox" /></td>
       <td
-        ><select name="DataTypes">
+        ><select name="DataTypes" bind:value={paramater.type.value} bind:textContent={paramater.type.text} contenteditable>
           {#each dataTypes as type}
             <option value={type.value}>{type.text}</option>
           {/each}

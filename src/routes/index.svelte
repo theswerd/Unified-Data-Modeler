@@ -1,39 +1,69 @@
 <script lang="ts">
   import { io } from "socket.io-client";
-
-  import successkid from "images/successkid.jpg";
+  import dataTypes from "../models/data_types";
   import { onMount } from "svelte";
+  import Nav from "../components/Nav.svelte";
+  import type { Parameter } from "../models/parameter";
+
+  let parameters: Array<Parameter> = [
+    {
+      name: "Name",
+      type: dataTypes[0],
+      required: true,
+    },
+  ];
+
   onMount(() => {
     console.log("MOUNTED");
     const socket = io();
-	socket.emit('test')
-    socket.on('ok',(args) => {
-      console.log("ok",args);
+    socket.emit("test");
+    socket.on("ok", (args) => {
+      console.log("ok", args);
     });
-    // socket.on("connection", () => {
-    //   console.log("revieved connection from socket");
-
-    //   socket.emit('test')
-    // });
   });
+
+  let addParameter = () => {
+    console.log("ADD");
+    parameters.push({
+      name: "",
+      type: dataTypes[0],
+      required: true,
+    });
+	parameters = parameters;
+  };
+
+  $: console.log(parameters)
 </script>
 
 <svelte:head>
   <title>Unified Data Modelers</title>
 </svelte:head>
-
-<h1>Great success!</h1>
-
-<figure>
-  <img alt="Success Kid" src={successkid} />
-  <figcaption>Have fun with Sapper!</figcaption>
-</figure>
-
-<p>
-  <strong
-    >Try editing this file (src/routes/index.svelte) to test live reloading.</strong
-  >
-</p>
+<Nav />
+<table>
+  <tr>
+    <th> Name </th>
+    <th> Required </th>
+    <th> Type </th>
+  </tr>
+  {#each parameters as paramater}
+    <tr>
+      <td><input value={paramater.name} /></td>
+      <td><input checked={paramater.required} type="checkbox" /></td>
+      <td
+        ><select name="DataTypes">
+          {#each dataTypes as type}
+            <option value={type.value}>{type.text}</option>
+          {/each}
+        </select></td
+      >
+    </tr>
+  {/each}
+</table>
+<button on:click={addParameter}>Add Parameter</button>
 
 <style>
+  th {
+    text-align: start;
+    padding: 8px;
+  }
 </style>

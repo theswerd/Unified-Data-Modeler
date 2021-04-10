@@ -110,7 +110,7 @@
 <Nav />
 <table>
   <tr>
-    <th colspan="3"
+    <th colspan="4"
       ><input placeholder="Model Name" bind:value={modelName} /></th
     >
   </tr>
@@ -118,6 +118,7 @@
     <th> Parameter </th>
     <th> Type </th>
     <th> Require </th>
+    <th> Remove </th>
   </tr>
   {#if parameters != null}
     {#each parameters as parameter, index}

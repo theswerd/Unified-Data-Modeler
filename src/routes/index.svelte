@@ -41,7 +41,11 @@
     parameters = parameters;
   };
 
-  $: fromNetwork ? fromNetwork = false :   parameters != null? socket?.emit("parameters", parameters): null;
+  $: fromNetwork
+    ? (fromNetwork = false)
+    : parameters != null
+    ? socket?.emit("parameters", parameters)
+    : null;
 </script>
 
 <svelte:head>
@@ -55,25 +59,24 @@
     <th> Type </th>
   </tr>
   {#if parameters != null}
-  {#each parameters as paramater, index}
-    <tr>
-      <td><input bind:value={paramater.name} /></td>
-      <td><input bind:checked={paramater.required} type="checkbox" /></td>
-      <td
-        ><select
-          name="DataTypes"
-          bind:value={parameters[index].type.value}
-          bind:textContent={parameters[index].type.text}
-          contenteditable
+    {#each parameters as paramater, index}
+      <tr>
+        <td><input bind:value={paramater.name} /></td>
+        <td><input bind:checked={paramater.required} type="checkbox" /></td>
+        <td
+          ><select
+            name="DataTypes"
+            bind:value={parameters[index].type.value}
+            bind:textContent={parameters[index].type.text}
+            contenteditable
+          >
+            {#each dataTypes as type}
+              <option value={type.value}>{type.text}</option>
+            {/each}
+          </select></td
         >
-		
-          {#each dataTypes as type}
-            <option value={type.value}>{type.text}</option>
-          {/each}
-        </select></td
-      >
-    </tr>
-  {/each}
+      </tr>
+    {/each}
   {/if}
 </table>
 <button on:click={addParameter}>Add Parameter</button>

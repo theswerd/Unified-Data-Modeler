@@ -3,9 +3,9 @@
   import dataTypes from "../models/data_types";
   import { onMount } from "svelte";
   import Nav from "../components/Nav.svelte";
-import type { Parameter } from "../models/parameter";
-  
-let parameters: Array<Parameter> = [
+  import type { Parameter } from "../models/parameter";
+
+  let parameters: Array<Parameter> = [
     {
       name: "Name",
       type: dataTypes[0],
@@ -22,32 +22,29 @@ let parameters: Array<Parameter> = [
     });
   });
 
- 
+  let addParameter = () => {
+    console.log("ADD");
+    parameters.push({
+      name: "",
+      type: dataTypes[0],
+      required: true,
+    });
+	parameters = parameters;
+  };
 
-  
+  $: console.log(parameters)
 </script>
-<style>
-	th {
-		text-align: start;
-		padding: 8px;
-	}
-</style>
+
 <svelte:head>
   <title>Unified Data Modelers</title>
 </svelte:head>
 <Nav />
 <table>
-	<tr>
-		<th>
-			Name
-		</th>
-		<th>
-			Required
-		</th>
-		<th>
-			Type
-		</th>
-	</tr>
+  <tr>
+    <th> Name </th>
+    <th> Required </th>
+    <th> Type </th>
+  </tr>
   {#each parameters as paramater}
     <tr>
       <td><input value={paramater.name} /></td>
@@ -57,9 +54,16 @@ let parameters: Array<Parameter> = [
           {#each dataTypes as type}
             <option value={type.value}>{type.text}</option>
           {/each}
-          
         </select></td
       >
     </tr>
   {/each}
 </table>
+<button on:click={addParameter}>Add Parameter</button>
+
+<style>
+  th {
+    text-align: start;
+    padding: 8px;
+  }
+</style>

@@ -1,7 +1,7 @@
 <script lang="ts">
 </script>
 
-<style>
+<style type="text/scss">
 	@import '../styles/vars.scss';
 	nav {
 		align-items: center;
@@ -9,7 +9,6 @@
 		font-weight: 300;
 		padding: 0 1em;
 		color: $main-color;
-	}
 		align-items: center;
   		justify-content: center;
   		padding: 8px;

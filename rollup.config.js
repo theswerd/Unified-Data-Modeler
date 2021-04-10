@@ -7,6 +7,7 @@ import svelte from 'rollup-plugin-svelte';
 import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
+import { scss } from "svelte-preprocess";
 import typescript from '@rollup/plugin-typescript';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
@@ -21,6 +22,7 @@ const onwarn = (warning, onwarn) =>
 	(warning.code === 'THIS_IS_UNDEFINED') ||
 	onwarn(warning);
 
+	
 export default {
   client: {
     input: config.client.input().replace(/\.js$/, ".ts"),
@@ -34,12 +36,11 @@ export default {
         },
       }),
       svelte({
-        preprocess: autoPreprocess(),
-        // preprocess: sveltePreprocess({ sourceMap: dev }),
-        // compilerOptions: {
-        // 	dev,
-        // 	hydratable: true
-        // }
+        preprocess: sveltePreprocess({ sourceMap: dev }),
+        compilerOptions: {
+        	dev,
+        	hydratable: true
+        }
       }),
       url({
         sourceDir: path.resolve(__dirname, "src/node_modules/images"),

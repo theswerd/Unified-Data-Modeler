@@ -104,18 +104,21 @@
   <title>Unified Data Modeler</title>
 </svelte:head>
 <Nav />
-<input placeholder="Model Name" bind:value={modelName} />
 <table>
   <tr>
-    <th> Name </th>
-    <th> Required </th>
+    <th colspan="3"
+      ><input placeholder="Model Name" bind:value={modelName} /></th
+    >
+  </tr>
+  <tr>
+    <th> Parameter </th>
     <th> Type </th>
+    <th> Require </th>
   </tr>
   {#if parameters != null}
     {#each parameters as paramater}
       <tr>
         <td><input bind:value={paramater.name} /></td>
-        <td><input bind:checked={paramater.required} type="checkbox" /></td>
         <td
           ><select
             name="DataTypes"
@@ -128,19 +131,120 @@
             {/each}
           </select></td
         >
+        <td
+          ><label class="container"
+            ><input bind:checked={paramater.required} type="checkbox" /><span
+              class="checkmark"
+            /></label
+          ></td
+        >
         <td><button on:click={() => removeParameter(paramater)}>x</button></td>
       </tr>
     {/each}
   {/if}
+</table>
+<table>
+  <tr />
 </table>
 <button on:click={addParameter}>Add Parameter</button>
 <button on:click={exportModel}>Export</button>
 <input type="file" on:change={uploadFile} accept=".yaml" />
 
 <style>
+
+.container {
+  display: block;
+  position: relative; 
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.container input {
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  transition-duration: 500ms;
+}
+
+/* On mouse-over, add a grey background color */
+/* .container:hover input ~ .checkmark {
+  background-color: #ccc;
+} */
+
+
+.container input:checked ~ .checkmark {
+  background-color: #00b518;
+  transition-duration: 500ms;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  transition-duration: 500ms;
+}
+  table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    border: 4px solid #292A30;
+	background-color: #2F3239;
+	opacity: 1;
+  }
+
+  input:active ,
+  input:focus  {
+    border: none;
+    outline: none;
+  }
+
+  table td ,
+  table th  {
+    border: 4px solid #292A30;
+    overflow: hidden;
+  }
+  input {
+    margin: auto;
+    text-align: left;
+    padding: 5px;
+    border: none;
+    align-self: center;
+    box-sizing: border-box;
+    background-color: #2F3239;
+    color: #e0dce4;
+  }
+
   th {
-    text-align: start;
+    text-align: left;
     padding: 8px;
+
   }
 
   input {
@@ -149,7 +253,17 @@
   td {
     text-align: center;
   }
+   
   :global(body) {
-    font-family: "Courier Prime", monospace;
+    font-family: 'Rubik', sans-serif;
+    background-color: #292A30;
+    color:  #e0dce4;
   }
+  button {
+    font-family: 'Rubik', sans-serif;
+  }
+  input {
+    font-family: 'Rubik', sans-serif;
+  } 
+
 </style>

@@ -7,7 +7,7 @@
   import { onMount } from "svelte";
   import Nav from "../components/Nav.svelte";
   import type { BaseParameter, Parameter } from "../models/parameter";
-  import { flatSyntax } from "../logic/syntax_tree";
+  import { flatSyntax, flatMap, syntaxTree } from "../logic/syntax_tree";
   import udmYaml from "../logic/export/udm.yaml";
 
   let parameters: Array<Parameter>;
@@ -50,7 +50,7 @@
   let addParameter = () => {
     parameters.push({
       name: "",
-      type: flatSyntax[0],
+      type: flatMap(syntaxTree)[0],
       required: true,
     });
     console.log("PaRAMETERS", parameters);
@@ -116,14 +116,18 @@
     <th> Require </th>
   </tr>
   {#if parameters != null}
-    {#each parameters as paramater}
+    {#each parameters as parameter, index}
       <tr>
-        <td><input bind:value={paramater.name} /></td>
+        <td><input bind:value={parameter.name} /></td>
         <td
-          ><select
+          ><!-- svelte-ignore a11y-no-onchange -->
+          <select
             name="DataTypes"
-            bind:value={paramater.type.value}
-            bind:textContent={paramater.type.name}
+            bind:value={parameter.type}
+            on:change={(value) => {
+              //parameters[index] = value.
+              console.log("SMH", value, index);
+            }}
             contenteditable
           >
             {#each flatSyntax as type}
@@ -133,12 +137,12 @@
         >
         <td
           ><label class="container"
-            ><input bind:checked={paramater.required} type="checkbox" /><span
+            ><input bind:checked={parameter.required} type="checkbox" /><span
               class="checkmark"
             /></label
           ></td
         >
-        <td><button on:click={() => removeParameter(paramater)}>x</button></td>
+        <td><button on:click={() => removeParameter(parameter)}>x</button></td>
       </tr>
     {/each}
   {/if}
@@ -151,83 +155,81 @@
 <input type="file" on:change={uploadFile} accept=".yaml" />
 
 <style>
+  .container {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 
-.container {
-  display: block;
-  position: relative; 
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
+  .container input {
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
 
-.container input {
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    transition-duration: 500ms;
+  }
 
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  transition-duration: 500ms;
-}
-
-/* On mouse-over, add a grey background color */
-/* .container:hover input ~ .checkmark {
+  /* On mouse-over, add a grey background color */
+  /* .container:hover input ~ .checkmark {
   background-color: #ccc;
 } */
 
+  .container input:checked ~ .checkmark {
+    background-color: #00b518;
+    transition-duration: 500ms;
+  }
 
-.container input:checked ~ .checkmark {
-  background-color: #00b518;
-  transition-duration: 500ms;
-}
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
 
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
+  .container input:checked ~ .checkmark:after {
+    display: block;
+  }
 
-.container input:checked ~ .checkmark:after {
-  display: block;
-}
-
-.container .checkmark:after {
-  left: 9px;
-  top: 5px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  transition-duration: 500ms;
-}
+  .container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    transition-duration: 500ms;
+  }
   table {
     margin: 0 auto;
     border-collapse: collapse;
-    border: 4px solid #292A30;
-	background-color: #2F3239;
-	opacity: 1;
+    border: 4px solid #292a30;
+    background-color: #2f3239;
+    opacity: 1;
   }
 
-  input:active ,
-  input:focus  {
+  input:active,
+  input:focus {
     border: none;
     outline: none;
   }
 
-  table td ,
-  table th  {
-    border: 4px solid #292A30;
+  table td,
+  table th {
+    border: 4px solid #292a30;
     overflow: hidden;
   }
   input {
@@ -237,14 +239,13 @@
     border: none;
     align-self: center;
     box-sizing: border-box;
-    background-color: #2F3239;
+    background-color: #2f3239;
     color: #e0dce4;
   }
 
   th {
     text-align: left;
     padding: 8px;
-
   }
 
   input {
@@ -253,17 +254,16 @@
   td {
     text-align: center;
   }
-   
+
   :global(body) {
-    font-family: 'Rubik', sans-serif;
-    background-color: #292A30;
-    color:  #e0dce4;
+    font-family: "Rubik", sans-serif;
+    background-color: #292a30;
+    color: #e0dce4;
   }
   button {
-    font-family: 'Rubik', sans-serif;
+    font-family: "Rubik", sans-serif;
   }
   input {
-    font-family: 'Rubik', sans-serif;
-  } 
-
+    font-family: "Rubik", sans-serif;
+  }
 </style>

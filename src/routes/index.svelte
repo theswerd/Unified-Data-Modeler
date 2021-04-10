@@ -7,7 +7,7 @@
   import Nav from "../components/Nav.svelte";
   import type { Parameter } from "../models/parameter";
 
-  let parameters: Array<Parameter> = [];
+  let parameters: Array<Parameter>;
 
   let socket: Socket;
   let fromNetwork: boolean = false;
@@ -41,7 +41,7 @@
     parameters = parameters;
   };
 
-  $: fromNetwork ? fromNetwork = false : socket?.emit("parameters", parameters);
+  $: fromNetwork ? fromNetwork = false :   parameters != null? socket?.emit("parameters", parameters): null;
 </script>
 
 <svelte:head>

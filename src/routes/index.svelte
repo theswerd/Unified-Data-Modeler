@@ -7,7 +7,6 @@
   import Nav from "../components/Nav.svelte";
   import type { Parameter } from "../models/parameter";
   import { flatSyntax } from "../logic/syntax_tree";
-import type { type } from "node:os";
 
   let parameters: Array<Parameter>;
   let modelName: string;
@@ -64,6 +63,11 @@ import type { type } from "node:os";
     saveAs(blob, "mymodel.udm.yaml");
   };
 
+  let importModel = (test) => {
+    console.log("TEST", test)
+  };
+
+
   $: parametersFromNetwork
     ? (parametersFromNetwork = false)
     : parameters != null
@@ -110,6 +114,7 @@ import type { type } from "node:os";
 </table>
 <button on:click={addParameter}>Add Parameter</button>
 <button on:click={exportModel}>Export</button>
+<input on:change={importModel} type="file" accept=".yaml">
 
 <style>
   th {

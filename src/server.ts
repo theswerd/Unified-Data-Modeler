@@ -5,7 +5,7 @@ import express from "express";
 import HttpServer from "http";
 import { Server } from "socket.io";
 import type { Parameter } from "./models/parameter";
-import dataTypes from "./models/data_types";
+import { flatSyntax } from "./logic/syntax_tree";
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === "development";
@@ -17,6 +17,8 @@ app.use(
   sapper.middleware()
 );
 
+
+
 const httpServer = new HttpServer.Server(app);
 
 const io = new Server(httpServer, {
@@ -26,23 +28,29 @@ const io = new Server(httpServer, {
 });
 const defaultParameters: Array<Parameter> = [
   {
-    name: 'Price',
+    name: "Price",
     required: true,
-    type: dataTypes[1]
-  }
-]
-
+    type: flatSyntax[1],
+  },
+];
+const defaultModelName = "MyModelName";
 let parameters = defaultParameters;
-
+let modelName = defaultModelName;
 io.on("connection", (socket) => {
-	console.log('CONNECTION')
-  socket.emit('parameters', parameters)
-  socket.on('parameters', (value) => {
+  console.log("CONNECTION");
+  socket.emit("parameters", parameters);
+  socket.emit("modelName", modelName);
+
+  socket.on("parameters", (value) => {
     parameters = value;
-    console.log('NEW PARAMETERS',Date.now(),  parameters);
-    socket.broadcast.emit('parameters', parameters)
+    console.log("NEW PARAMETERS", Date.now(), parameters);
+    socket.broadcast.emit("parameters", parameters);
   });
-  
+
+  socket.on("modelName", (value) => {
+    modelName = value;
+    socket.broadcast.emit("modelName", modelName);
+  });
 });
 
 

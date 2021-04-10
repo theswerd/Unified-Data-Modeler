@@ -1,23 +1,35 @@
 <script lang="ts">
   import { io } from "socket.io-client";
   import type { Socket } from "socket.io-client";
+  import { saveAs } from "file-saver";
 
-  import dataTypes from "../models/data_types";
   import { onMount } from "svelte";
   import Nav from "../components/Nav.svelte";
   import type { Parameter } from "../models/parameter";
+  import { flatSyntax } from "../logic/syntax_tree";
+import type { type } from "node:os";
 
   let parameters: Array<Parameter>;
-
+  let modelName: string;
   let socket: Socket;
-  let fromNetwork: boolean = false;
+  let modelNameFromNetwork: boolean = false;
+
+  let parametersFromNetwork: boolean = false;
   onMount(() => {
     console.log("MOUNTED");
     socket = io();
+
+    socket.on("modelName",(newModelName)=>{
+      if(modelName != newModelName){
+        modelNameFromNetwork = true
+        modelName = newModelName;
+
+      }
+    })
     socket.on("parameters", (newParameters) => {
       console.log("PARAMETERS", parameters);
       if (parameters != newParameters) {
-        fromNetwork = true;
+        parametersFromNetwork = true;
         parameters = [...newParameters];
       }
     });
@@ -27,7 +39,7 @@
     });
   });
 
-  let removeParameter = (index) => {
+  let removeParameter = (index: number) => {
     parameters.splice(index, 1);
     parameters = parameters;
   };
@@ -35,23 +47,40 @@
   let addParameter = () => {
     parameters.push({
       name: "",
-      type: dataTypes[0],
+      type: flatSyntax[0],
       required: true,
     });
     parameters = parameters;
   };
 
-  $: fromNetwork
-    ? (fromNetwork = false)
+  let exportModel = () => {
+    console.log("logggg");
+    var blob = new Blob(["name: "+modelName+"\n"+"parameters:\n", parameters.map((value)=>{
+     return "\t- name: "+value.name+"\n\t  requried: "+value.required+"\n\t  type: "+value.type.value
+    }).join('\n')], {
+      type: "text/plain;charset=utf-8",
+    });
+    
+    saveAs(blob, "mymodel.udm.yaml");
+  };
+
+  $: parametersFromNetwork
+    ? (parametersFromNetwork = false)
     : parameters != null
     ? socket?.emit("parameters", parameters)
+    : null;
+  $: modelNameFromNetwork
+    ? (modelNameFromNetwork = false)
+    : modelName != null
+    ? socket?.emit("modelName", modelName)
     : null;
 </script>
 
 <svelte:head>
-  <title>Unified Data Modelers</title>
+  <title>Unified Data Modeler</title>
 </svelte:head>
 <Nav />
+<input placeholder="Model Name" bind:value={modelName}/>
 <table>
   <tr>
     <th> Name </th>
@@ -67,11 +96,11 @@
           ><select
             name="DataTypes"
             bind:value={parameters[index].type.value}
-            bind:textContent={parameters[index].type.text}
+            bind:textContent={parameters[index].type.name}
             contenteditable
           >
-            {#each dataTypes as type}
-              <option value={type.value}>{type.text}</option>
+            {#each flatSyntax as type}
+              <option value={type.value}>{type.name}</option>
             {/each}
           </select></td
         >
@@ -80,10 +109,15 @@
   {/if}
 </table>
 <button on:click={addParameter}>Add Parameter</button>
+<button on:click={exportModel}>Export</button>
 
 <style>
   th {
     text-align: start;
     padding: 8px;
+  }
+
+  input{
+    text-transform: lowercase; 
   }
 </style>

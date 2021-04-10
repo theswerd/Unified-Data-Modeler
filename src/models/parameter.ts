@@ -1,4 +1,4 @@
-import type { DataType } from "./data_types";
+import type { DataType } from "../logic/syntax_tree";
 
 export interface Parameter {
   name: string;

@@ -8,8 +8,7 @@
   import Nav from "../components/Nav.svelte";
   import type { BaseParameter, Parameter } from "../models/parameter";
   import { flatSyntax } from "../logic/syntax_tree";
-
-  let files: FileList;
+  import udmYaml from "../logic/export/udm.yaml";
 
   let parameters: Array<Parameter>;
   let modelName: string;
@@ -40,8 +39,11 @@
     });
   });
 
-  let removeParameter = (index: number) => {
-    parameters.splice(index, 1);
+  let removeParameter = (parameter: Parameter) => {
+    parameters.slice(
+      parameters.findIndex((p) => p == parameter),
+      1
+    );
     parameters = parameters;
   };
 
@@ -51,39 +53,22 @@
       type: flatSyntax[0],
       required: true,
     });
+    console.log("PaRAMETERS", parameters);
     parameters = parameters;
   };
 
   let exportModel = () => {
     console.log("logggg");
-    var blob = new Blob(
-      [
-        "name: " + modelName + "\n" + "parameters:\n",
-        parameters
-          .map((value) => {
-            return (
-              "  - name: " +
-              value.name +
-              "\n    required: " +
-              value.required +
-              "\n    type: " +
-              value.type.value
-            );
-          })
-          .join("\n"),
-      ],
-      {
-        type: "text/plain;charset=utf-8",
-      }
-    );
+    var blob = new Blob([udmYaml(modelName, parameters)], {
+      type: "text/plain;charset=utf-8",
+    });
 
-    saveAs(blob, modelName.length == 0?"mymodel":modelName+".udm.yaml");
+    saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.yaml");
   };
 
-  $: {
+  let uploadFile = (files) => {
     console.log("FILES", files);
     if (files != undefined && files != null && (files?.length ?? 0) != 0) {
-      const reader = new FileReader();
       files
         .item(0)
         .text()
@@ -92,17 +77,16 @@
           const doc = yaml.load(text);
           console.log(doc);
           modelName = doc.name;
-          parameters = (doc.parameters as Array<BaseParameter>).map((base)=>{
-            return  {
-              name: flatSyntax.find((value)=>value.value ==base.type).name,
-              type: flatSyntax.find((value)=>value.value ==base.type),
+          parameters = (doc.parameters as Array<BaseParameter>).map((base) => {
+            return {
+              name: flatSyntax.find((value) => value.value == base.type).name,
+              type: flatSyntax.find((value) => value.value == base.type),
               required: base.required,
-              
-            } as Parameter
-          })
+            } as Parameter;
+          });
         });
     }
-  }
+  };
 
   $: parametersFromNetwork
     ? (parametersFromNetwork = false)
@@ -128,15 +112,15 @@
     <th> Type </th>
   </tr>
   {#if parameters != null}
-    {#each parameters as paramater, index}
+    {#each parameters as paramater}
       <tr>
         <td><input bind:value={paramater.name} /></td>
         <td><input bind:checked={paramater.required} type="checkbox" /></td>
         <td
           ><select
             name="DataTypes"
-            bind:value={parameters[index].type.value}
-            bind:textContent={parameters[index].type.name}
+            bind:value={paramater.type.value}
+            bind:textContent={paramater.type.name}
             contenteditable
           >
             {#each flatSyntax as type}
@@ -144,13 +128,14 @@
             {/each}
           </select></td
         >
+        <td><button on:click={() => removeParameter(paramater)}>x</button></td>
       </tr>
     {/each}
   {/if}
 </table>
 <button on:click={addParameter}>Add Parameter</button>
 <button on:click={exportModel}>Export</button>
-<input type="file" bind:files accept=".yaml" />
+<input type="file" on:change={uploadFile} accept=".yaml" />
 
 <style>
   th {
@@ -165,7 +150,6 @@
     text-align: center;
   }
   :global(body) {
-    font-family: 'Courier Prime', monospace;
+    font-family: "Courier Prime", monospace;
   }
-  
 </style>

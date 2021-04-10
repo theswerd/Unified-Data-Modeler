@@ -47,6 +47,10 @@
     parameters = parameters;
   };
 
+  let clear = () => {
+    parameters = []
+  }
+
   let addParameter = () => {
     parameters.push({
       name: "",
@@ -153,7 +157,7 @@
 <button on:click={addParameter}>Add Parameter</button>
 <button on:click={exportModel}>Export</button>
 <input type="file" on:change={uploadFile} accept=".yaml" />
-
+<button on:click={clear}>Clear</button>
 <style>
   .container {
     display: block;

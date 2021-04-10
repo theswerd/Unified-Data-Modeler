@@ -4,6 +4,8 @@ import * as sapper from "@sapper/server";
 import express from "express";
 import HttpServer from "http";
 import { Server } from "socket.io";
+import type { Parameter } from "./models/parameter";
+import dataTypes from "./models/data_types";
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === "development";
@@ -22,12 +24,23 @@ const io = new Server(httpServer, {
     origin: "*",
   },
 });
+const defaultParameters: Array<Parameter> = [
+  {
+    name: 'Price',
+    required: true,
+    type: dataTypes[1]
+  }
+]
+
+let parameters = defaultParameters;
 
 io.on("connection", (socket) => {
 	console.log('CONNECTION')
-  socket.on('parameters', (t) => {
-    console.log('TEST')
-    console.log(t)
+  socket.emit('parameters', parameters)
+  socket.on('parameters', (value) => {
+    parameters = value;
+    console.log('NEW PARAMETERS',Date.now(),  parameters);
+    socket.broadcast.emit('parameters', parameters)
   });
   
 });

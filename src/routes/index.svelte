@@ -65,7 +65,7 @@
           bind:textContent={parameters[index].type.text}
           contenteditable
         >
-          {#each dataTypes as type}
+          {#each dataTypes ?? [] as type}
             <option value={type.value}>{type.text}</option>
           {/each}
         </select></td

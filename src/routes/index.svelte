@@ -120,8 +120,9 @@
   <title>Unified Data Modeler</title>
 </svelte:head>
 <Nav />
-<input placeholder="Model Name" bind:value={modelName} />
 <table>
+  <tr><input placeholder="Model Name" bind:value={modelName} />
+  </tr>
   <tr>
     <th> Parameter </th>
     <th> Type </th>
@@ -158,7 +159,7 @@
 <input type="file" bind:files accept=".yaml" />
 
 <style>
- 
+
 .container {
   display: block;
   position: relative; 

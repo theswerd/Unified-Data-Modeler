@@ -2,10 +2,11 @@
   import { io } from "socket.io-client";
   import type { Socket } from "socket.io-client";
   import { saveAs } from "file-saver";
+  import * as yaml from "js-yaml";
 
   import { onMount } from "svelte";
   import Nav from "../components/Nav.svelte";
-  import type { Parameter } from "../models/parameter";
+  import type { BaseParameter, Parameter } from "../models/parameter";
   import { flatSyntax } from "../logic/syntax_tree";
 
   let files: FileList;
@@ -20,13 +21,12 @@
     console.log("MOUNTED");
     socket = io();
 
-    socket.on("modelName",(newModelName)=>{
-      if(modelName != newModelName){
-        modelNameFromNetwork = true
+    socket.on("modelName", (newModelName) => {
+      if (modelName != newModelName) {
+        modelNameFromNetwork = true;
         modelName = newModelName;
-
       }
-    })
+    });
     socket.on("parameters", (newParameters) => {
       console.log("PARAMETERS", parameters);
       if (parameters != newParameters) {
@@ -56,22 +56,53 @@
 
   let exportModel = () => {
     console.log("logggg");
-    var blob = new Blob(["name: "+modelName+"\n"+"parameters:\n", parameters.map((value)=>{
-     return "\t- name: "+value.name+"\n\t  requried: "+value.required+"\n\t  type: "+value.type.value
-    }).join('\n')], {
-      type: "text/plain;charset=utf-8",
-    });
-    
+    var blob = new Blob(
+      [
+        "name: " + modelName + "\n" + "parameters:\n",
+        parameters
+          .map((value) => {
+            return (
+              "  - name: " +
+              value.name +
+              "\n    required: " +
+              value.required +
+              "\n    type: " +
+              value.type.value
+            );
+          })
+          .join("\n"),
+      ],
+      {
+        type: "text/plain;charset=utf-8",
+      }
+    );
+
     saveAs(blob, "mymodel.udm.yaml");
   };
 
   $: {
-    console.log("FILES",files)
-    if(files != undefined && files != null && (files?.length ?? 0) != 0){
-
+    console.log("FILES", files);
+    if (files != undefined && files != null && (files?.length ?? 0) != 0) {
+      const reader = new FileReader();
+      files
+        .item(0)
+        .text()
+        .then((text) => {
+          console.log("FILE TEXT", text);
+          const doc = yaml.load(text);
+          console.log(doc);
+          modelName = doc.name;
+          parameters = (doc.parameters as Array<BaseParameter>).map((base)=>{
+            return  {
+              name: flatSyntax.find((value)=>value.value ==base.type).name,
+              type: flatSyntax.find((value)=>value.value ==base.type),
+              required: base.required,
+              
+            } as Parameter
+          })
+        });
     }
   }
-
 
   $: parametersFromNetwork
     ? (parametersFromNetwork = false)
@@ -89,7 +120,7 @@
   <title>Unified Data Modeler</title>
 </svelte:head>
 <Nav />
-<input placeholder="Model Name" bind:value={modelName}/>
+<input placeholder="Model Name" bind:value={modelName} />
 <table>
   <tr>
     <th> Name </th>
@@ -119,7 +150,7 @@
 </table>
 <button on:click={addParameter}>Add Parameter</button>
 <button on:click={exportModel}>Export</button>
-<input  type="file" bind:files accept=".yaml">
+<input type="file" bind:files accept=".yaml" />
 
 <style>
   th {
@@ -127,7 +158,7 @@
     padding: 8px;
   }
 
-  input{
-    text-transform: lowercase; 
+  input {
+    text-transform: lowercase;
   }
 </style>

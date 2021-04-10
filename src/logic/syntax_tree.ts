@@ -133,7 +133,7 @@ export const syntaxTree: DataType = {
   ],
 };
 
-let flatMap = (dataType: DataType, flatTypesBase: Array<DataType> = []) => {
+let flatMap = (dataType: DataType, flatTypesBase: Array<DataType> = [syntaxTree]) => {
   let flatTypes: Array<DataType> = flatTypesBase;
   dataType.subTypes.forEach((type) => {
     flatTypes.push(type);

@@ -8,6 +8,8 @@
   import type { Parameter } from "../models/parameter";
   import { flatSyntax } from "../logic/syntax_tree";
 
+  let files: FileList;
+
   let parameters: Array<Parameter>;
   let modelName: string;
   let socket: Socket;
@@ -63,9 +65,12 @@
     saveAs(blob, "mymodel.udm.yaml");
   };
 
-  let importModel = (test) => {
-    console.log("TEST", test)
-  };
+  $: {
+    console.log("FILES",files)
+    if(files != undefined && files != null && (files?.length ?? 0) != 0){
+
+    }
+  }
 
 
   $: parametersFromNetwork
@@ -113,8 +118,8 @@
   {/if}
 </table>
 <button on:click={addParameter}>Add Parameter</button>
-<button on:click={exportModel}>Export {modelName}</button>
-<input on:change={importModel} type="file" accept=".yaml">
+<button on:click={exportModel}>Export</button>
+<input  type="file" bind:files accept=".yaml">
 
 <style>
   th {

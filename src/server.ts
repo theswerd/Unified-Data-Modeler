@@ -25,10 +25,11 @@ const io = new Server(httpServer, {
 
 io.on("connection", (socket) => {
 	console.log('CONNECTION')
-  socket.on('test', (_) => {
+  socket.on('parameters', (t) => {
     console.log('TEST')
-    socket.emit('ok', {'test':'test'})
+    console.log(t)
   });
+  
 });
 
 

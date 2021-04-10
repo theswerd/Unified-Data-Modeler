@@ -1,26 +1,11 @@
 <script lang="ts">
   import { io } from "socket.io-client";
-  const dataTypes: Array<DataType> = [
-    {
-      value: "text",
-      text: "Text",
-    },
-    {
-      value: "number",
-      text: "Number",
-    },
-    {
-      value: "integer",
-      text: "Integer",
-    },
-    {
-      value: "character",
-      text: "Character",
-    },
-  ];
+  import dataTypes from "../models/data_types";
   import { onMount } from "svelte";
   import Nav from "../components/Nav.svelte";
-  let parameters: Array<Parameter> = [
+import type { Parameter } from "../models/parameter";
+  
+let parameters: Array<Parameter> = [
     {
       name: "Name",
       type: dataTypes[0],
@@ -37,16 +22,9 @@
     });
   });
 
-  interface Parameter {
-    name: string;
-    type: DataType;
-    required: boolean;
-  }
+ 
 
-  interface DataType {
-    value: string;
-    text: string;
-  }
+  
 </script>
 <style>
 	th {
@@ -79,10 +57,7 @@
           {#each dataTypes as type}
             <option value={type.value}>{type.text}</option>
           {/each}
-          <option value="volvo">Volvo</option>
-          <option value="saab">Saab</option>
-          <option value="mercedes">Mercedes</option>
-          <option value="audi">Audi</option>
+          
         </select></td
       >
     </tr>

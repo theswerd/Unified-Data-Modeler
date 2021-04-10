@@ -92,15 +92,14 @@
 <input placeholder="Model Name" bind:value={modelName}/>
 <table>
   <tr>
-    <th> Name </th>
-    <th> Required </th>
+    <th> Parameter </th>
     <th> Type </th>
+    <th> Require </th>
   </tr>
   {#if parameters != null}
     {#each parameters as paramater, index}
       <tr>
         <td><input bind:value={paramater.name} /></td>
-        <td><label class="container"><input bind:checked={paramater.required} type="checkbox" /><span class="checkmark"></span></label></td>
         <td
           ><select
             name="DataTypes"
@@ -113,16 +112,22 @@
             {/each}
           </select></td
         >
+        <td><label class="container"><input bind:checked={paramater.required} type="checkbox" /><span class="checkmark"></span></label></td>
       </tr>
     {/each}
   {/if}
+</table>
+<table>
+  <tr>
+
+  </tr>
 </table>
 <button on:click={addParameter}>Add Parameter</button>
 <button on:click={exportModel}>Export</button>
 <input  type="file" bind:files accept=".yaml">
 
 <style>
-  /* Customize the label (the container) */
+ 
 .container {
   display: block;
   position: relative; 
@@ -133,7 +138,6 @@
   user-select: none;
 }
 
-/* Hide the browser's default checkbox */
 .container input {
   opacity: 0;
   cursor: pointer;
@@ -141,14 +145,12 @@
   width: 0;
 }
 
-/* Create a custom checkbox */
 .checkmark {
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: #BF0A30;
   transition-duration: 500ms;
 }
 
@@ -157,25 +159,22 @@
   background-color: #ccc;
 } */
 
-/* When the checkbox is checked, add a blue background */
+
 .container input:checked ~ .checkmark {
   background-color: #00b518;
-  transition-duration: 300ms;
+  transition-duration: 500ms;
 }
 
-/* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
   content: "";
   position: absolute;
   display: none;
 }
 
-/* Show the checkmark when checked */
 .container input:checked ~ .checkmark:after {
   display: block;
 }
 
-/* Style the checkmark/indicator */
 .container .checkmark:after {
   left: 9px;
   top: 5px;
@@ -191,8 +190,8 @@
   table {
     margin: 0 auto;
     border-collapse: collapse;
-    border: 2px solid whitesmoke;
-	background-color: white;
+    border: 4px solid #292A30;
+	background-color: #2F3239;
 	opacity: 1;
   }
 
@@ -204,19 +203,22 @@
 
   table td ,
   table th  {
-    border: 2px solid whitesmoke;
+    border: 4px solid #292A30;
+    overflow: hidden;
   }
   input {
     margin: auto;
-    text-align: center;
+    text-align: left;
     padding: 5px;
     border: none;
     align-self: center;
     box-sizing: border-box;
+    background-color: #2F3239;
+    color: #e0dce4;
   }
 
   th {
-    text-align: center;
+    text-align: left;
     padding: 8px;
 
   }
@@ -229,25 +231,15 @@
   }
    
   :global(body) {
-    font-family: 'Courier Prime', monospace;
-    
+    font-family: 'Rubik', sans-serif;
+    background-color: #292A30;
+    color:  #e0dce4;
   }
   button {
-    font-family: 'Courier Prime', monospace;
+    font-family: 'Rubik', sans-serif;
   }
   input {
-    font-family: 'Courier Prime', monospace;
+    font-family: 'Rubik', sans-serif;
   } 
 
-@keyframes gradient {
-	0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
-}
 </style>

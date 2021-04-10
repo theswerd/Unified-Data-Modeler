@@ -151,13 +151,11 @@
   {/if}
 </table>
 <table>
-  <tr>
-
-  </tr>
+  <tr><td><button on:click={addParameter}>Add Parameter</button></td></tr>
+  <tr><td><button on:click={exportModel}>Export {modelName}</button></td></tr>
+  <tr><td><input type="file" bind:files accept=".yaml" /></td></tr>
 </table>
-<button on:click={addParameter}>Add Parameter</button>
-<button on:click={exportModel}>Export</button>
-<input type="file" bind:files accept=".yaml" />
+
 
 <style>
 
@@ -209,8 +207,10 @@
 }
 
 .container .checkmark:after {
-  left: 9px;
-  top: 5px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  top: 4px;
   width: 5px;
   height: 10px;
   border: solid white;
@@ -234,8 +234,8 @@
     outline: none;
   }
 
-  table td ,
-  table th  {
+  td ,
+  th  {
     border: 4px solid #292A30;
     overflow: hidden;
   }

@@ -113,7 +113,7 @@
   {/if}
 </table>
 <button on:click={addParameter}>Add Parameter</button>
-<button on:click={exportModel}>Export</button>
+<button on:click={exportModel}>Export {modelName}</button>
 <input on:change={importModel} type="file" accept=".yaml">
 
 <style>

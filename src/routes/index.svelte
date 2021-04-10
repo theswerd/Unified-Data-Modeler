@@ -77,7 +77,7 @@
       }
     );
 
-    saveAs(blob, "mymodel.udm.yaml");
+    saveAs(blob, modelName.length == 0?"mymodel":modelName+".udm.yaml");
   };
 
   $: {
@@ -161,4 +161,11 @@
   input {
     text-transform: lowercase;
   }
+  td {
+    text-align: center;
+  }
+  :global(body) {
+    font-family: 'Courier Prime', monospace;
+  }
+  
 </style>

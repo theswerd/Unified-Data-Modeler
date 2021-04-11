@@ -255,23 +255,18 @@
   border-radius="0"
 >
   <tr>
-    <th class="export">Export TS</th>
-    <th class="export">Export Dart</th>
-    <th class="export">Export Rust</th>
-    <th class="export">Export UDM</th>
+     <th><button class="export" on:click={exportTS}>Export TS</button></th>
+     <th><button class="export" on:click={exportRust}>Export Rust</button></th>
+     <th><button class="export" on:click={exportDart}>Export Dart</button></th>
+     <th><button class="export" on:click={exportCS}>Export C#</button></th>
+     <th><button class="export" on:click={exportModel}>Export UDM</button></th>
   </tr>
   <tr>
-    <td colspan="4">Import UDM</td>
+    <th colspan="5"><label class="container"><input type="file" accept=".yaml" bind:files /><span
+      class="export"
+    />Import UDM</label></th>
   </tr>
 </table>
-<button on:click={exportModel}>Export</button>
-<button on:click={exportTS}>Export TS</button>
-<button on:click={exportDart}>Export Dart</button>
-<button on:click={exportRust}>Export Rust</button>
-<button on:click={exportCS}>Export C#</button>
-
-<input type="file" accept=".yaml" bind:files />
-<button on:click={clear}>Clear</button>
 <br />
 <section class="bottom">
   <h2>TypeScript</h2>
@@ -326,6 +321,8 @@
   }
 
   .export {
+    border: none;
+    text-align: center;
     background-color: #2f3239;
     color: #e0dce4;
     transition: 500ms;

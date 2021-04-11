@@ -32,13 +32,13 @@ let type = (
 
   let newPastTypes = [tree, ...pastTypes];
   if (dataType.value == tree.value) {
-    debugger
+    
     return backwardsSearch(newPastTypes);
   } else {
     for (const i in tree.subTypes) {
       const returnValue = type(dataType, tree.subTypes[i], newPastTypes);
       if (returnValue != null && returnValue != undefined) {
-        debugger
+        
         return returnValue;
       }
     }

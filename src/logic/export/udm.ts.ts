@@ -3,10 +3,14 @@ import { syntaxTree, Languages, flatSyntax, DataType } from "../syntax_tree";
 import type from "./type_finder";
 import warning from "./warning";
 
-export default (name: string, parameters: Array<Parameter>): string => {
+export default (
+  name: string,
+  parameters: Array<Parameter>,
+  withWarning: boolean = true
+): string => {
   console.log("PARAMETERS", parameters);
   return (
-    warning +
+    (withWarning ? warning : "") +
     "\nexport default interface " +
     name +
     " {\n" +

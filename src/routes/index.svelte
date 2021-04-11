@@ -44,19 +44,16 @@
 
   let removeParameter = (index: number) => {
     if (parameters.length == 1) {
-      addParameter()
+      addParameter();
     }
-    parameters.splice(
-      index,
-      1
-    );
+    parameters.splice(index, 1);
     parameters = parameters;
   };
 
   let clear = () => {
-    parameters = []
-    addParameter()
-  }
+    parameters = [];
+    addParameter();
+  };
 
   let addParameter = () => {
     parameters.push({
@@ -76,6 +73,9 @@
 
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.yaml");
   };
+
+  $: tsCode =
+    parameters != null ? ts(modelName, [...parameters], false) : "// Loading";
   let exportTS = () => {
     console.log("logggg");
     var blob = new Blob([ts(modelName, [...parameters])], {
@@ -84,16 +84,18 @@
 
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.ts");
   };
-
+  $: dartCode =
+    parameters != null ? dart(modelName, [...parameters], false) : "// Loading";
   let exportDart = () => {
     console.log("logggg");
     var blob = new Blob([dart(modelName, [...parameters])], {
       type: "text/plain;charset=utf-8",
     });
-
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.dart");
   };
 
+  $: rustCode =
+    parameters != null ? rust(modelName, [...parameters], false) : "// Loading";
   let exportRust = () => {
     console.log("logggg");
     var blob = new Blob([rust(modelName, [...parameters])], {
@@ -106,7 +108,7 @@
   $: {
     console.log("FILES", files);
     if (files != undefined && files != null && (files?.length ?? 0) != 0) {
-      console.log("INSIDEEEE")
+      console.log("INSIDEEEE");
       files
         .item(0)
         .text()
@@ -114,17 +116,19 @@
           console.log("FILE TEXT", text);
           const doc = yaml.load(text);
           console.log(doc);
-          modelName = doc['name'];
-          parameters = (doc['parameters'] as Array<BaseParameter>).map((base) => {
-            return {
-              name: flatSyntax.find((value) => value.value == base.type).name,
-              type: flatSyntax.find((value) => value.value == base.type),
-              required: base.required,
-            } as Parameter;
-          });
+          modelName = doc["name"];
+          parameters = (doc["parameters"] as Array<BaseParameter>).map(
+            (base) => {
+              return {
+                name: flatSyntax.find((value) => value.value == base.type).name,
+                type: flatSyntax.find((value) => value.value == base.type),
+                required: base.required,
+              } as Parameter;
+            }
+          );
         });
     }
-  };
+  }
 
   $: parametersFromNetwork
     ? (parametersFromNetwork = false)
@@ -181,7 +185,11 @@
             /></label
           ></td
         >
-        <td><button class="removeButton" on:click={() => removeParameter(index)}>×</button></td>
+        <td
+          ><button class="removeButton" on:click={() => removeParameter(index)}
+            >×</button
+          ></td
+        >
       </tr>
     {/each}
   {/if}
@@ -194,26 +202,28 @@
 <button on:click={exportTS}>Export TS</button>
 <button on:click={exportDart}>Export Dart</button>
 <button on:click={exportRust}>Export Rust</button>
-
-<input type="file" accept=".yaml" bind:files/>
+<input type="file" accept=".yaml" bind:files />
 <button on:click={clear}>Clear</button>
-<style>
+<br>
 
-.fullsize {
-  height: 100%;
-}
+<pre>{tsCode}</pre>
+<pre>{rustCode}</pre>
+
+<style>
+  .fullsize {
+    height: 100%;
+  }
   .removeButton {
     width: 100%;
     height: 100%;
     border: none;
-    background-color:#2f3239;
+    background-color: #2f3239;
     color: white;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 25px;
   }
   .removeButton:focus {
     outline: 0;
-
   }
   .removeButton:hover {
     cursor: pointer;
@@ -272,20 +282,20 @@
     display: block;
   }
 
-.container .checkmark:after {
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  top: 4px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  transition-duration: 250ms;
-}
+  .container .checkmark:after {
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: 4px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    transition-duration: 250ms;
+  }
   table {
     margin: 0 auto;
     border-collapse: collapse;
@@ -300,9 +310,9 @@
     outline: none;
   }
 
-  td ,
-  th  {
-    border: 4px solid #292A30;
+  td,
+  th {
+    border: 4px solid #292a30;
     overflow: hidden;
   }
   input {

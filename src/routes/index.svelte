@@ -42,6 +42,9 @@
   });
 
   let removeParameter = (index: number) => {
+    if (parameters.length == 1) {
+      addParameter()
+    }
     parameters.splice(
       index,
       1
@@ -51,14 +54,14 @@
 
   let clear = () => {
     parameters = []
-
+    addParameter()
   }
 
   let addParameter = () => {
     parameters.push({
       name: "",
       type: flatMap(syntaxTree)[0],
-      required: true,
+      required: false,
     });
     console.log("PaRAMETERS", parameters);
     parameters = parameters;
@@ -235,7 +238,7 @@
     left: 0;
     height: 100%;
     width: 100%;
-    transition-duration: 500ms;
+    transition-duration: 250ms;
   }
 
   /* On mouse-over, add a grey background color */
@@ -245,7 +248,7 @@
 
   .container input:checked ~ .checkmark {
     background-color: #00b518;
-    transition-duration: 500ms;
+    transition-duration: 250ms;
   }
 
   .checkmark:after {
@@ -270,7 +273,7 @@
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
-  transition-duration: 500ms;
+  transition-duration: 250ms;
 }
   table {
     margin: 0 auto;

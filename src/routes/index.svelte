@@ -147,7 +147,7 @@
             /></label
           ></td
         >
-        <td><button on:click={() => removeParameter(parameter)}>x</button></td>
+        <td><button class="removeButton" on:click={() => removeParameter(parameter)}>×</button></td>
       </tr>
     {/each}
   {/if}
@@ -161,6 +161,25 @@
 <button on:click={clear}>Clear</button>
 <style>
 
+.fullsize {
+  height: 100%;
+}
+  .removeButton {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color:#2f3239;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+  }
+  .removeButton:focus {
+    outline: 0;
+
+  }
+  .removeButton:hover {
+    cursor: pointer;
+  }
   .container {
     display: block;
     position: relative;
@@ -178,6 +197,14 @@
     width: 0;
   }
 
+  .removeMark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: red;
+  }
   .checkmark {
     position: absolute;
     top: 0;

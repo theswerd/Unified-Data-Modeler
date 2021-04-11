@@ -11,6 +11,7 @@
   import cs from "../logic/export/udm.cs";
   import dart from "../logic/export/udm.dart";
   import rust from "../logic/export/udm.rs";
+  import java from "../logic/export/udm.java";
 
   import { Highlight } from "svelte-highlight";
   import {
@@ -19,6 +20,7 @@
     dart as dartHighlight,
     yaml as yamlHighlight,
     cs as csHighlight,
+    java as javaHighlight,
   } from "svelte-highlight/languages";
   import { irBlack } from "svelte-highlight/styles";
 
@@ -114,6 +116,14 @@
       type: "text/plain;charset=utf-8",
     });
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.dart");
+  };
+
+  $: javaCode = parameters != null ? java(modelName, [...parameters], false) : "// Loading";
+  let exportJava = () => {
+    var blob = new Blob([dart(modelName, [...parameters])], {
+      type: "text/plain;charset=utf-8",
+    });
+    saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.java");
   };
 
   $: rustCode =
@@ -235,10 +245,12 @@
     <th><button class="export" on:click={exportRust}>Export Rust</button></th>
     <th><button class="export" on:click={exportDart}>Export Dart</button></th>
     <th><button class="export" on:click={exportCS}>Export C#</button></th>
+    <th><button class="export" on:click={exportJava}>Export Java</button></th>
+
     <th><button class="export" on:click={exportModel}>Export UDM</button></th>
   </tr>
   <tr>
-    <th colspan="5"><label class="container"><input type="file" accept=".yaml" bind:files /><span
+    <th colspan="6"><label class="container"><input type="file" accept=".yaml" bind:files /><span
       class="export"
     />Import UDM</label></th>
   </tr>
@@ -253,6 +265,8 @@
   <Highlight language={dartHighlight} code={dartCode} />
   <h2>C#</h2>
   <Highlight language={csHighlight} code={csCode} />
+  <h2>Java</h2>
+  <Highlight language={javaHighlight} code={javaCode} />
   <h2>UDM</h2>
   <Highlight language={yamlHighlight} code={udmCode} />
 </section>

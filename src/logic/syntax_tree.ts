@@ -15,6 +15,7 @@ export enum Languages {
   Rust,
   Dart,
   CS,
+  Java,
 }
 
 export const syntaxTree: DataType = {
@@ -28,6 +29,10 @@ export const syntaxTree: DataType = {
       languages: [
         {
           language: Languages.Rust,
+          syntax: "char",
+        },
+        {
+          language: Languages.Java,
           syntax: "char",
         },
       ],
@@ -52,6 +57,10 @@ export const syntaxTree: DataType = {
         {
           language: Languages.CS,
           syntax: "bool",
+        },
+        {
+          language: Languages.Java,
+          syntax: "boolean",
         },
       ],
     },
@@ -99,7 +108,10 @@ export const syntaxTree: DataType = {
               language: Languages.CS,
               syntax: "string[]",
             },
-            
+            {
+              language: Languages.Java,
+              syntax: "String[]",
+            },
           ],
         },
         {
@@ -121,7 +133,11 @@ export const syntaxTree: DataType = {
             },
             {
               language: Languages.CS,
-              syntax: "int[]",
+              syntax: "double[]",
+            },
+            {
+              language: Languages.Java,
+              syntax: "double[]",
             },
           ],
         },
@@ -164,6 +180,10 @@ export const syntaxTree: DataType = {
               language: Languages.CS,
               syntax: "int",
             },
+            {
+              language: Languages.Java,
+              syntax: "int",
+            },
           ],
         },
       ],
@@ -182,6 +202,10 @@ export const syntaxTree: DataType = {
         },
         {
           language: Languages.CS,
+          syntax: "double",
+        },
+        {
+          language: Languages.Java,
           syntax: "double",
         },
       ],
@@ -203,6 +227,10 @@ export const syntaxTree: DataType = {
     {
       language: Languages.CS,
       syntax: "string",
+    },
+    {
+      language: Languages.Java,
+      syntax: "String",
     },
   ],
 };

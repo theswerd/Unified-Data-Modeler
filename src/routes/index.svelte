@@ -191,7 +191,7 @@
         >
         <td
           ><button
-            class="clickableButton"
+            class="clickableButtonRemove"
             on:click={() => removeParameter(index)}>×</button
           ></td
         >
@@ -268,6 +268,25 @@
   .clickableButton:hover {
     cursor: pointer;
     color: #00b518;
+    transition-duration: 500ms;
+  }
+
+  .clickableButtonRemove {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: #2f3239;
+    color: #e0dce4;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    transition: 500ms;
+  }
+  .clickableButtonRemove:focus {
+    outline: 0;
+  }
+  .clickableButtonRemove:hover {
+    cursor: pointer;
+    color: #ff5555;
     transition-duration: 500ms;
   }
 

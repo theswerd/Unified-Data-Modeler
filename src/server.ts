@@ -43,12 +43,12 @@ io.on("connection", (socket) => {
   socket.on("parameters", (value) => {
     parameters = value;
     console.log("NEW PARAMETERS", Date.now(), parameters);
-    socket.emit("parameters", parameters);
+    socket.broadcast.emit("parameters", parameters);
   });
 
   socket.on("modelName", (value) => {
     modelName = value;
-    socket.emit("modelName", modelName);
+    socket.broadcast.emit("modelName", modelName);
   });
 
   socket.on("disconnect", () => {

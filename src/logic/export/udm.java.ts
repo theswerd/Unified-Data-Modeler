@@ -30,7 +30,7 @@ export default (
     "(" +
     parameters
       .map((value) => type(value.type, Languages.Java) + " " + value.name)
-      .join(" ") +
+      .join(", ") +
     ") {\n" +
     parameters.map((value)=>"        this."+value.name+" = "+value.name+";\n") +
     "    }" +

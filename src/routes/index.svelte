@@ -184,133 +184,166 @@
   <title>UDM</title>
   {@html irBlack}
 </svelte:head>
-<div class="light-mode">
-  <img
-    src="./favicon.png"
-    height="100px"
-    style="padding: 20px; margin: 0 auto; display: block;"
-    alt="logo"
-  />
-  <table>
-    <tr>
-      <th colspan="4"
-        ><input
-          style="text-align:center"
-          placeholder="Model Name"
-          bind:value={modelName}
-        /></th
-      >
-    </tr>
-    <tr>
-      <th> Parameter </th>
-      <th> Type </th>
-      <th> Require </th>
-      <th> Remove </th>
-    </tr>
-    {#if parameters != null}
-      {#each parameters as parameter, index}
-        <tr>
-          <td><input bind:value={parameter.name} /></td>
-          <td
-            ><!-- svelte-ignore a11y-no-onchange -->
-            <select
-              name="DataTypes"
-              bind:value={parameter.type.value}
-              on:change={(value) => {
-                //parameters[index] = value.
-                console.log("SMH", value, index);
-              }}
-              contenteditable
+<div class="wrapper">
+  <div style="height: 100%; overflow: scroll;">
+    <img
+      src="./favicon.png"
+      height="100px"
+      style="padding: 20px; margin: 0 auto; display: block;"
+      alt="logo"
+    />
+    <table>
+      <tr>
+        <th colspan="4"
+          ><input
+            style="text-align:center"
+            placeholder="Model Name"
+            bind:value={modelName}
+          /></th
+        >
+      </tr>
+      <tr>
+        <th> Parameter </th>
+        <th> Type </th>
+        <th> Require </th>
+        <th> Remove </th>
+      </tr>
+      {#if parameters != null}
+        {#each parameters as parameter, index}
+          <tr>
+            <td><input bind:value={parameter.name} /></td>
+            <td
+              ><!-- svelte-ignore a11y-no-onchange -->
+              <select
+                name="DataTypes"
+                style="color: white; background-color: transparent; border: none; outline: none;"
+                bind:value={parameter.type.value}
+                on:change={(value) => {
+                  //parameters[index] = value.
+                  console.log("SMH", value, index);
+                }}
+                contenteditable
+              >
+                {#each flatSyntax as type}
+                  <option style="background-color: grey;" value={type.value}
+                    >{type.name}</option
+                  >
+                {/each}
+              </select></td
             >
-              {#each flatSyntax as type}
-                <option value={type.value}>{type.name}</option>
-              {/each}
-            </select></td
-          >
-          <td
-            ><label class="container"
-              ><input bind:checked={parameter.required} type="checkbox" /><span
-                class="checkmark"
-              /></label
-            ></td
-          >
-          <td
-            ><button
-              class="clickableButtonRemove"
-              on:click={() => removeParameter(index)}>×</button
-            ></td
-          >
-        </tr>
-      {/each}
-    {/if}
-    <tr>
-      <th><button class="clickableButton" on:click={addParameter}>+</button></th
-      >
-      <th colspan="2" />
-      <th style="background-color:#ff5555"
-        ><button class="writtenButton" on:click={clear}>Clear</button></th
-      >
-    </tr>
-  </table>
-  <table
-    style="margin-top:20px"
-    class="equalDivide"
-    cellpadding="0"
-    cellspacing="0"
-    width="100%"
-    border-radius="0"
-  >
-    <tr>
-      <th><button class="export" on:click={exportTS}>Export TS</button></th>
-      <th><button class="export" on:click={exportRust}>Export Rust</button></th>
-      <th><button class="export" on:click={exportDart}>Export Dart</button></th>
-      <th><button class="export" on:click={exportCS}>Export C#</button></th>
-      <th><button class="export" on:click={exportJava}>Export Java</button></th>
+            <td
+              ><label class="container"
+                ><input
+                  bind:checked={parameter.required}
+                  type="checkbox"
+                /><span class="checkmark" /></label
+              ></td
+            >
+            <td
+              ><button
+                class="clickableButtonRemove"
+                on:click={() => removeParameter(index)}>×</button
+              ></td
+            >
+          </tr>
+        {/each}
+      {/if}
+      <tr>
+        <th
+          ><button class="clickableButton" on:click={addParameter}>+</button
+          ></th
+        >
+        <th colspan="2" />
+        <th style="background-color:#ff5555"
+          ><button class="writtenButton" on:click={clear}>Clear</button></th
+        >
+      </tr>
+    </table>
+    <table
+      style="margin-top:20px"
+      class="equalDivide"
+      cellpadding="0"
+      cellspacing="0"
+      width="100%"
+      border-radius="0"
+    >
+      <tr>
+        <th><button class="export" on:click={exportTS}>Export TS</button></th>
+        <th
+          ><button class="export" on:click={exportRust}>Export Rust</button></th
+        >
+        <th
+          ><button class="export" on:click={exportDart}>Export Dart</button></th
+        >
+        <th><button class="export" on:click={exportCS}>Export C#</button></th>
+        <th
+          ><button class="export" on:click={exportJava}>Export Java</button></th
+        >
 
-      <th><button class="export" on:click={exportModel}>Export UDM</button></th>
-    </tr>
-    <tr>
-      <th colspan="6"
-        ><label class="container"
-          ><input type="file" accept=".yaml" bind:files /><span
-            class="export"
-          />Import UDM</label
-        ></th
-      >
-    </tr>
-  </table>
-  <br />
-  <section class="bottom">
-    <h2>TypeScript</h2>
-    <Highlight language={typescript} code={tsCode} />
-    <h2>Rust</h2>
-    <Highlight language={rustHighlight} code={rustCode} />
-    <h2>Dart</h2>
-    <Highlight language={dartHighlight} code={dartCode} />
-    <h2>C#</h2>
-    <Highlight language={csHighlight} code={csCode} />
-    <h2>Java</h2>
-    <Highlight language={javaHighlight} code={javaCode} />
-    <h2>UDM</h2>
-    <Highlight language={yamlHighlight} code={udmCode} />
+        <th
+          ><button class="export" on:click={exportModel}>Export UDM</button></th
+        >
+      </tr>
+      <tr>
+        <th colspan="6"
+          ><label class="container"
+            ><input type="file" accept=".yaml" bind:files /><span
+              class="export"
+            />Import UDM</label
+          ></th
+        >
+      </tr>
+    </table>
+  </div>
+  <section class="bottom" style="overflow: scroll; background-color: #2c2c2c">
+    <div class="code-container">
+      <h2>TypeScript</h2>
+      <Highlight language={typescript} code={tsCode} />
+    </div>
+
+    <div class="code-container">
+      <h2>Rust</h2>
+      <Highlight language={rustHighlight} code={rustCode} />
+    </div>
+
+    <div class="code-container">
+      <h2>Dart</h2>
+      <Highlight language={dartHighlight} code={dartCode} />
+    </div>
+
+    <div class="code-container">
+      <h2>C#</h2>
+      <Highlight language={csHighlight} code={csCode} />
+    </div>
+
+    <div class="code-container">
+      <h2>Java</h2>
+      <Highlight language={javaHighlight} code={javaCode} />
+    </div>
+
+    <div class="code-container">
+      <h2>UDM</h2>
+      <Highlight language={yamlHighlight} code={udmCode} />
+    </div>
   </section>
 </div>
 
-<style type="text/scss">
-
+<style>
   :root {
-      --primary-color: #302AE6;
       --secondary-color: #2f3239;
       --font-color: #e0dce4;
       --bg-color: #292a30;
-      --heading-color: #292922;
   }
-  [data-theme="light"] {
-      --primary-color: #9A97F3;
+  /* [data-theme="light"] {
       --secondary-color: #818cab;
       --font-color: #e1e1ff;
       --bg-color: #161625;
-      --heading-color: #818cab;
+  } */
+  .code-container {
+    background-color: black;
+    border-radius: 3pt;
+    padding: 20pt;
+    margin: 20pt;
   }
   .equalDivide tr td {
     width: 25%;
@@ -321,13 +354,29 @@
   h2 {
     font-weight: bold;
   }
+  /* 
+  pre {
+    user-select: all;
+    -moz-user-select: all;
+    -webkit-user-select: all;
+    margin-top: 0px;
+    padding-top: 0px;
+  }
+  */
+
+  .wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    height: 100vh;
+    overflow: hidden;
+  }
 
   .clickableButton {
     width: 100%;
     height: 100%;
     border: none;
     background-color: var(--secondary-color);
-    color: #e0dce4;
+    color: var(--font-color);
     font-family: Arial, Helvetica, sans-serif;
     font-size: 25px;
     transition: 500ms;
@@ -343,7 +392,7 @@
 
   .export {
     background-color: var(--secondary-color);
-    color: #e0dce4;
+    color: var(--font-color);
     transition: 500ms;
     border: none;
     text-align: center;
@@ -362,7 +411,7 @@
     height: 100%;
     border: none;
     background-color: var(--secondary-color);
-    color: #e0dce4;
+    color: var(--font-color);
     font-family: Arial, Helvetica, sans-serif;
     font-size: 25px;
     transition: 500ms;
@@ -381,7 +430,7 @@
     height: 100%;
     border: none;
     background-color: #ff5555;
-    color: #e0dce4;
+    color: var(--font-color);
     font-size: 16px;
     font-weight: bold;
   }
@@ -444,7 +493,7 @@
     top: 4px;
     width: 5px;
     height: 10px;
-    border: solid #e0dce4;
+    border: solid var(--font-color);
     border-width: 0 3px 3px 0;
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
@@ -480,7 +529,7 @@
     align-self: center;
     box-sizing: border-box;
     background-color: var(--secondary-color);
-    color: #e0dce4;
+    color: var(--font-color);
   }
 
   th {
@@ -498,7 +547,7 @@
   :global(body) {
     font-family: "Rubik", sans-serif;
     background-color: var(--bg-color);
-    color: #e0dce4;
+    color: var(--font-color);
   }
   button {
     font-family: "Rubik", sans-serif;
@@ -507,34 +556,27 @@
     font-family: "Rubik", sans-serif;
   }
 
-  .light-mode {
-    input {
-      color: #333;
-      background-color: #c5c3c7;
-    }
-    th {
-      border: 4px solid #b4b5bd;
-    }
-    table {
-      border: 4px solid #b4b5bd;
-      background-color: #9fa2a9;
-    }
-    :global(body) {
-      background-color: #b4b5bd;
-      color: #333;
-    }
-    .clickableButton {
-      background-color: #9fa2a9;
-    }
-    .export {
-      background-color: #9fa2a9;
-      color: #333;
-    }
-    .clickableButtonRemove {
-      background-color: #9fa2a9;
-    }
-    input {
-      background-color: #9fa2a9;
-    }
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #2c2c2c;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(95, 95, 95);
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  ::-webkit-scrollbar-corner {
+    display: none;
   }
 </style>

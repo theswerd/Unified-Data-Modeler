@@ -148,7 +148,7 @@
   <title>Unified Data Modeler</title>
   {@html irBlack}
 </svelte:head>
-<img src="./favicon.png" height="160px" style="padding: 20px"/>
+<img src="./favicon.png" height="100px" style="padding: 20px; margin: 0 auto; display: block;" alt="logo" />
 <table>
   <tr>
     <th colspan="4"

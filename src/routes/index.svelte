@@ -40,6 +40,7 @@
     });
 
     socket.on("disconnect", () => {
+      console.warn('DISCONNECTED')
       socket.connect();
     });
   });

@@ -9,6 +9,7 @@
   import type { BaseParameter, Parameter } from "../models/parameter";
   import { flatSyntax, flatMap, syntaxTree } from "../logic/syntax_tree";
   import udmYaml from "../logic/export/udm.yaml";
+import ts from "../logic/export/ts";
 
   let parameters: Array<Parameter>;
   let modelName: string;
@@ -39,9 +40,9 @@
     });
   });
 
-  let removeParameter = (parameter: Parameter) => {
-    parameters.slice(
-      parameters.findIndex((p) => p == parameter),
+  let removeParameter = (index: number) => {
+    parameters.splice(
+      index,
       1
     );
     parameters = parameters;
@@ -49,6 +50,7 @@
 
   let clear = () => {
     parameters = []
+
   }
 
   let addParameter = () => {
@@ -68,6 +70,14 @@
     });
 
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.yaml");
+  };
+  let exportTS = () => {
+    console.log("logggg");
+    var blob = new Blob([ts(modelName, [...parameters])], {
+      type: "text/plain;charset=utf-8",
+    });
+
+    saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.ts");
   };
 
   let uploadFile = (files) => {
@@ -127,7 +137,7 @@
           ><!-- svelte-ignore a11y-no-onchange -->
           <select
             name="DataTypes"
-            bind:value={parameter.type}
+            bind:value={parameter.type.value}
             on:change={(value) => {
               //parameters[index] = value.
               console.log("SMH", value, index);
@@ -146,7 +156,7 @@
             /></label
           ></td
         >
-        <td><button on:click={() => removeParameter(parameter)}>x</button></td>
+        <td><button on:click={() => removeParameter(index)}>x</button></td>
       </tr>
     {/each}
   {/if}
@@ -156,6 +166,8 @@
 </table>
 <button on:click={addParameter}>Add Parameter</button>
 <button on:click={exportModel}>Export</button>
+<button on:click={exportTS}>Export TS</button>
+
 <input type="file" on:change={uploadFile} accept=".yaml" />
 <button on:click={clear}>Clear</button>
 <style>

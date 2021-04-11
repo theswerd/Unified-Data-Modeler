@@ -30,7 +30,7 @@ const defaultParameters: Array<Parameter> = [
   {
     name: "Price",
     required: true,
-    type: flatSyntax[1],
+    type: flatSyntax[0],
   },
 ];
 const defaultModelName = "MyModelName";

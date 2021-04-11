@@ -10,7 +10,7 @@ export interface Language {
   readonly syntax: string;
 }
 
-enum Languages {
+export enum Languages {
   TypeScript,
   Rust,
   Dart,
@@ -51,8 +51,8 @@ export const syntaxTree: DataType = {
       ],
     },
     {
-      name: "List",
-      value: "list",
+      name: "List of Strings",
+      value: "list_of_strings",
       subTypes: [],
       languages: [
         {
@@ -61,11 +61,30 @@ export const syntaxTree: DataType = {
         },
         {
           language: Languages.Dart,
-          syntax: "List",
+          syntax: "List<String>",
         },
         {
           language: Languages.TypeScript,
-          syntax: "Array",
+          syntax: "Array<string>",
+        },
+      ],
+    },
+    {
+      name: "List of Numbers",
+      value: "list_of_numbers",
+      subTypes: [],
+      languages: [
+        {
+          language: Languages.Rust,
+          syntax: "Vec<fsize>",
+        },
+        {
+          language: Languages.Dart,
+          syntax: "List<double>",
+        },
+        {
+          language: Languages.TypeScript,
+          syntax: "Array<number>",
         },
       ],
     },
@@ -79,7 +98,7 @@ export const syntaxTree: DataType = {
           subTypes: [
             {
               name: "Unsigned Integer",
-              value: "unsignedInteger",
+              value: "unsigned_integer",
               subTypes: [],
               languages: [
                 {

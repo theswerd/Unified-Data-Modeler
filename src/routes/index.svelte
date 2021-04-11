@@ -24,6 +24,10 @@
   onMount(() => {
     console.log("MOUNTED");
     socket = io();
+    console.log("CONNECTED 1", socket.connected);
+
+    socket.open();
+    console.log("CONNECTED 2", socket.connected);
 
     socket.on("modelName", (newModelName) => {
       if (modelName != newModelName) {

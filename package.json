@@ -6,7 +6,7 @@
     "dev": "sapper dev",
     "build": "sapper build",
     "export": "sapper export --legacy",
-    "start": "sapper dev",
+    "start": "node __sapper__/build",
     "validate": "svelte-check --ignore src/node_modules/@sapper"
   },
   "dependencies": {

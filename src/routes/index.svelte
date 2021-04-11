@@ -295,7 +295,7 @@
       </tr>
     </table>
   </div>
-  <section class="bottom" style="overflow: scroll; background-color: #2c2c2c">
+  <section class="bottom" style="overflow: scroll; background-color: #2f3239">
     <div class="code-container">
       <h2>TypeScript</h2>
       <Highlight language={typescript} code={tsCode} />
@@ -553,7 +553,7 @@
 
   /* Track */
   ::-webkit-scrollbar-track {
-    background: #2c2c2c;
+    background: #2f3239;
   }
 
   /* Handle */

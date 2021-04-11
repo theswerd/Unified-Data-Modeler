@@ -8,7 +8,7 @@
 		border-bottom: 1px solid rgba(255,62,0,0.1);
 		font-weight: 300;
 		padding: 0 1em;
-		color: $main-color;
+		color: $font-color;
 		align-items: center;
   		justify-content: center;
   		padding: 8px;

@@ -6,6 +6,7 @@
 
   import { onMount } from "svelte";
   import Nav from "../components/Nav.svelte";
+  import AutoComplete from '../components/AutoComplete.svelte';
   import type { BaseParameter, Parameter } from "../models/parameter";
   import { flatSyntax, flatMap, syntaxTree } from "../logic/syntax_tree";
   import udmYaml from "../logic/export/udm.yaml";
@@ -57,7 +58,7 @@
       type: flatMap(syntaxTree)[0],
       required: true,
     });
-    console.log("PaRAMETERS", parameters);
+    console.log("PARAMETERS", parameters);
     parameters = parameters;
   };
 
@@ -123,6 +124,7 @@
     {#each parameters as parameter, index}
       <tr>
         <td><input bind:value={parameter.name} /></td>
+        <td><AutoComplete/></td>
         <td
           ><!-- svelte-ignore a11y-no-onchange -->
           <select
@@ -158,8 +160,8 @@
 <button on:click={exportModel}>Export</button>
 <input type="file" on:change={uploadFile} accept=".yaml" />
 <button on:click={clear}>Clear</button>
-<style>
-
+<style type="text/scss">
+  @import '../styles/vars.scss';
   .container {
     display: block;
     position: relative;
@@ -223,8 +225,8 @@
   table {
     margin: 0 auto;
     border-collapse: collapse;
-    border: 4px solid #292a30;
-    background-color: #2f3239;
+    border: 4px solid $bg-color;
+    background-color: $content-bg-color;
     opacity: 1;
   }
 
@@ -236,8 +238,11 @@
 
   td ,
   th  {
-    border: 4px solid #292A30;
+    border: 4px solid $bg-color;
     overflow: hidden;
+  }
+  td {
+    overflow: visible;
   }
   input {
     margin: auto;
@@ -246,7 +251,7 @@
     border: none;
     align-self: center;
     box-sizing: border-box;
-    background-color: #2f3239;
+    background-color: $content-bg-color;
     color: #e0dce4;
   }
 
@@ -264,7 +269,7 @@
 
   :global(body) {
     font-family: "Rubik", sans-serif;
-    background-color: #292a30;
+    background-color: $bg-color;
     color: #e0dce4;
   }
   button {

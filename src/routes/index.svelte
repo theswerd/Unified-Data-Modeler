@@ -9,7 +9,7 @@
   import type { BaseParameter, Parameter } from "../models/parameter";
   import { flatSyntax, flatMap, syntaxTree } from "../logic/syntax_tree";
   import udmYaml from "../logic/export/udm.yaml";
-import ts from "../logic/export/ts";
+  import ts from "../logic/export/ts";
 
   let parameters: Array<Parameter>;
   let modelName: string;

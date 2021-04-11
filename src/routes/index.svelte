@@ -9,13 +9,14 @@
   import type { BaseParameter, Parameter } from "../models/parameter";
   import { flatSyntax, flatMap, syntaxTree } from "../logic/syntax_tree";
   import udmYaml from "../logic/export/udm.yaml";
-  import ts from "../logic/export/ts";
+  import ts from "../logic/export/udm.ts";
+  import dart from "../logic/export/udm.dart";
 
   let parameters: Array<Parameter>;
   let modelName: string;
   let socket: Socket;
   let modelNameFromNetwork: boolean = false;
-
+  let files: FileList;
   let parametersFromNetwork: boolean = false;
   onMount(() => {
     console.log("MOUNTED");
@@ -80,9 +81,19 @@
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.ts");
   };
 
-  let uploadFile = (files) => {
+  let exportDart = () => {
+    console.log("logggg");
+    var blob = new Blob([dart(modelName, [...parameters])], {
+      type: "text/plain;charset=utf-8",
+    });
+
+    saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.dart");
+  };
+
+  $: {
     console.log("FILES", files);
     if (files != undefined && files != null && (files?.length ?? 0) != 0) {
+      console.log("INSIDEEEE")
       files
         .item(0)
         .text()
@@ -90,8 +101,8 @@
           console.log("FILE TEXT", text);
           const doc = yaml.load(text);
           console.log(doc);
-          modelName = doc.name;
-          parameters = (doc.parameters as Array<BaseParameter>).map((base) => {
+          modelName = doc['name'];
+          parameters = (doc['parameters'] as Array<BaseParameter>).map((base) => {
             return {
               name: flatSyntax.find((value) => value.value == base.type).name,
               type: flatSyntax.find((value) => value.value == base.type),
@@ -157,7 +168,7 @@
             /></label
           ></td
         >
-        <td><button class="removeButton" on:click={() => removeParameter(parameter)}>×</button></td>
+        <td><button class="removeButton" on:click={() => removeParameter(index)}>×</button></td>
       </tr>
     {/each}
   {/if}
@@ -168,8 +179,9 @@
 <button on:click={addParameter}>Add Parameter</button>
 <button on:click={exportModel}>Export</button>
 <button on:click={exportTS}>Export TS</button>
+<button on:click={exportDart}>Export Dart</button>
 
-<input type="file" on:change={uploadFile} accept=".yaml" />
+<input type="file" accept=".yaml" bind:files/>
 <button on:click={clear}>Clear</button>
 <style>
 

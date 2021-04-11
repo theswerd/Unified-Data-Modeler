@@ -260,12 +260,15 @@
     color: #e0dce4;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 25px;
+    transition: 500ms;
   }
   .clickableButton:focus {
     outline: 0;
   }
   .clickableButton:hover {
     cursor: pointer;
+    color: #00b518;
+    transition-duration: 500ms;
   }
 
   .writtenButton {

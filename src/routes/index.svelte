@@ -209,17 +209,27 @@
 <input type="file" accept=".yaml" bind:files />
 <button on:click={clear}>Clear</button>
 <br />
-<h3>TypeScript</h3>
+<section class="bottom">
+<h2>TypeScript</h2>
 <pre>{tsCode}</pre>
-<h3>Rust</h3>
-
+<h2>Rust</h2>
 <pre>{rustCode}</pre>
-<h3>Dart</h3>
-
+<h2>Dart</h2>
 <pre>{dartCode}</pre>
-
+</section>
 <style>
+  .bottom {
+    padding: 20px;
+
+    
+  }
+  h2 {
+    font-weight: bold;
+  }
   pre{
+    user-select: all;
+    -moz-user-select: all;
+    -webkit-user-select:all;
     margin-top: 0px;
     padding-top: 0px;
   }

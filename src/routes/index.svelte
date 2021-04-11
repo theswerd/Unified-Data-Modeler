@@ -209,12 +209,20 @@
 <input type="file" accept=".yaml" bind:files />
 <button on:click={clear}>Clear</button>
 <br />
-
+<h3>TypeScript</h3>
 <pre>{tsCode}</pre>
+<h3>Rust</h3>
+
 <pre>{rustCode}</pre>
+<h3>Dart</h3>
+
 <pre>{dartCode}</pre>
 
 <style>
+  pre{
+    margin-top: 0px;
+    padding-top: 0px;
+  }
   .fullsize {
     height: 100%;
   }

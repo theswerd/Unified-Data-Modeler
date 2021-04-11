@@ -10,8 +10,8 @@ export default (
 ): string => {
   console.log("PARAMETERS", parameters);
   return (
-    (withWarning ? warning : "") +
-    "\nexport default interface " +
+    (withWarning ? warning +"\n": "") +
+    "export default interface " +
     name +
     " {\n" +
     parameters

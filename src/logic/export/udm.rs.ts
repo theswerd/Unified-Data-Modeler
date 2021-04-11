@@ -10,8 +10,7 @@ export default (
 ): string => {
   return (
     (withWarning ? warning + "\n" : "") +
-    `
-// Add these lines to the [dependencies] section of your cargo.toml:
+    `// Add these lines to the [dependencies] section of your cargo.toml:
 // serde = { version = "1.0", features = ["derive"] }
 // serde_json = "1.0"
 

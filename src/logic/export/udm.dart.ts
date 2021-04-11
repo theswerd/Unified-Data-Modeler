@@ -6,8 +6,8 @@ import warning from "./warning";
 export default (name: string, parameters: Array<Parameter>, withWarning: boolean = true): string => {
   console.log("PARAMETERS", parameters);
   return (
-    (withWarning ? warning : "") +
-    "\nclass " +
+    (withWarning ? warning+"\n" : "") +
+    "class " +
     name +
     " {\n" +
     parameters

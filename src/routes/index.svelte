@@ -11,6 +11,7 @@
   import udmYaml from "../logic/export/udm.yaml";
   import ts from "../logic/export/udm.ts";
   import dart from "../logic/export/udm.dart";
+  import rust from "../logic/export/udm.rs";
 
   let parameters: Array<Parameter>;
   let modelName: string;
@@ -91,6 +92,15 @@
     });
 
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.dart");
+  };
+
+  let exportRust = () => {
+    console.log("logggg");
+    var blob = new Blob([rust(modelName, [...parameters])], {
+      type: "text/plain;charset=utf-8",
+    });
+
+    saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.rs");
   };
 
   $: {
@@ -184,6 +194,7 @@
 <button on:click={exportModel}>Export</button>
 <button on:click={exportTS}>Export TS</button>
 <button on:click={exportDart}>Export Dart</button>
+<button on:click={exportRust}>Export Rust</button>
 
 <input type="file" accept=".yaml" bind:files/>
 <button on:click={clear}>Clear</button>

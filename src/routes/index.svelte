@@ -89,7 +89,8 @@
 
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.yaml");
   };
-  $: udmCode = parameters != null ? udmYaml(modelName, [...parameters]) : "// Loading";
+  $: udmCode =
+    parameters != null ? udmYaml(modelName, [...parameters]) : "// Loading";
   $: tsCode =
     parameters != null ? ts(modelName, [...parameters], false) : "// Loading";
   let exportTS = () => {
@@ -118,7 +119,8 @@
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.dart");
   };
 
-  $: javaCode = parameters != null ? java(modelName, [...parameters], false) : "// Loading";
+  $: javaCode =
+    parameters != null ? java(modelName, [...parameters], false) : "// Loading";
   let exportJava = () => {
     var blob = new Blob([dart(modelName, [...parameters])], {
       type: "text/plain;charset=utf-8",
@@ -182,118 +184,149 @@
   <title>UDM</title>
   {@html irBlack}
 </svelte:head>
-<img src="./favicon.png" height="100px" style="padding: 20px; margin: 0 auto; display: block;" alt="logo" />
-<table>
-  <tr>
-    <th colspan="4"
-      ><input style="text-align:center" placeholder="Model Name" bind:value={modelName} /></th
-    >
-  </tr>
-  <tr>
-    <th> Parameter </th>
-    <th> Type </th>
-    <th> Require </th>
-    <th> Remove </th>
-  </tr>
-  {#if parameters != null}
-    {#each parameters as parameter, index}
-      <tr>
-        <td><input bind:value={parameter.name} /></td>
-        <td
-          ><!-- svelte-ignore a11y-no-onchange -->
-          <select
-            name="DataTypes"
-            bind:value={parameter.type.value}
-            on:change={(value) => {
-              //parameters[index] = value.
-              console.log("SMH", value, index);
-            }}
-            contenteditable
+<div class="light-mode">
+  <img
+    src="./favicon.png"
+    height="100px"
+    style="padding: 20px; margin: 0 auto; display: block;"
+    alt="logo"
+  />
+  <table>
+    <tr>
+      <th colspan="4"
+        ><input
+          style="text-align:center"
+          placeholder="Model Name"
+          bind:value={modelName}
+        /></th
+      >
+    </tr>
+    <tr>
+      <th> Parameter </th>
+      <th> Type </th>
+      <th> Require </th>
+      <th> Remove </th>
+    </tr>
+    {#if parameters != null}
+      {#each parameters as parameter, index}
+        <tr>
+          <td><input bind:value={parameter.name} /></td>
+          <td
+            ><!-- svelte-ignore a11y-no-onchange -->
+            <select
+              name="DataTypes"
+              bind:value={parameter.type.value}
+              on:change={(value) => {
+                //parameters[index] = value.
+                console.log("SMH", value, index);
+              }}
+              contenteditable
+            >
+              {#each flatSyntax as type}
+                <option value={type.value}>{type.name}</option>
+              {/each}
+            </select></td
           >
-            {#each flatSyntax as type}
-              <option value={type.value}>{type.name}</option>
-            {/each}
-          </select></td
-        >
-        <td
-          ><label class="container"
-            ><input bind:checked={parameter.required} type="checkbox" /><span
-              class="checkmark"
-            /></label
-          ></td
-        >
-        <td
-          ><button
-            class="clickableButtonRemove"
-            on:click={() => removeParameter(index)}>×</button
-          ></td
-        >
-      </tr>
-    {/each}
-  {/if}
-  <tr>
-    <th><button class="clickableButton" on:click={addParameter}>+</button></th>
-    <th colspan="2" />
-    <th style="background-color:#ff5555"
-      ><button class="writtenButton" on:click={clear}>Clear</button></th
-    >
-  </tr>
-</table>
-<table style="margin-top:20px" class="equalDivide" cellpadding="0" cellspacing="0" width="100%" border-radius="0">
-  <tr>
-    <th><button class="export" on:click={exportTS}>Export TS</button></th>
-    <th><button class="export" on:click={exportRust}>Export Rust</button></th>
-    <th><button class="export" on:click={exportDart}>Export Dart</button></th>
-    <th><button class="export" on:click={exportCS}>Export C#</button></th>
-    <th><button class="export" on:click={exportJava}>Export Java</button></th>
+          <td
+            ><label class="container"
+              ><input bind:checked={parameter.required} type="checkbox" /><span
+                class="checkmark"
+              /></label
+            ></td
+          >
+          <td
+            ><button
+              class="clickableButtonRemove"
+              on:click={() => removeParameter(index)}>×</button
+            ></td
+          >
+        </tr>
+      {/each}
+    {/if}
+    <tr>
+      <th><button class="clickableButton" on:click={addParameter}>+</button></th
+      >
+      <th colspan="2" />
+      <th style="background-color:#ff5555"
+        ><button class="writtenButton" on:click={clear}>Clear</button></th
+      >
+    </tr>
+  </table>
+  <table
+    style="margin-top:20px"
+    class="equalDivide"
+    cellpadding="0"
+    cellspacing="0"
+    width="100%"
+    border-radius="0"
+  >
+    <tr>
+      <th><button class="export" on:click={exportTS}>Export TS</button></th>
+      <th><button class="export" on:click={exportRust}>Export Rust</button></th>
+      <th><button class="export" on:click={exportDart}>Export Dart</button></th>
+      <th><button class="export" on:click={exportCS}>Export C#</button></th>
+      <th><button class="export" on:click={exportJava}>Export Java</button></th>
 
-    <th><button class="export" on:click={exportModel}>Export UDM</button></th>
-  </tr>
-  <tr>
-    <th colspan="6"><label class="container"><input type="file" accept=".yaml" bind:files /><span
-      class="export"
-    />Import UDM</label></th>
-  </tr>
-</table>
-<br />
-<section class="bottom">
-  <h2>TypeScript</h2>
-  <Highlight language={typescript} code={tsCode} />
-  <h2>Rust</h2>
-  <Highlight language={rustHighlight} code={rustCode} />
-  <h2>Dart</h2>
-  <Highlight language={dartHighlight} code={dartCode} />
-  <h2>C#</h2>
-  <Highlight language={csHighlight} code={csCode} />
-  <h2>Java</h2>
-  <Highlight language={javaHighlight} code={javaCode} />
-  <h2>UDM</h2>
-  <Highlight language={yamlHighlight} code={udmCode} />
-</section>
+      <th><button class="export" on:click={exportModel}>Export UDM</button></th>
+    </tr>
+    <tr>
+      <th colspan="6"
+        ><label class="container"
+          ><input type="file" accept=".yaml" bind:files /><span
+            class="export"
+          />Import UDM</label
+        ></th
+      >
+    </tr>
+  </table>
+  <br />
+  <section class="bottom">
+    <h2>TypeScript</h2>
+    <Highlight language={typescript} code={tsCode} />
+    <h2>Rust</h2>
+    <Highlight language={rustHighlight} code={rustCode} />
+    <h2>Dart</h2>
+    <Highlight language={dartHighlight} code={dartCode} />
+    <h2>C#</h2>
+    <Highlight language={csHighlight} code={csCode} />
+    <h2>Java</h2>
+    <Highlight language={javaHighlight} code={javaCode} />
+    <h2>UDM</h2>
+    <Highlight language={yamlHighlight} code={udmCode} />
+  </section>
+</div>
 
-<style>
-  .equalDivide tr td { width:25%; }
+<style type="text/scss">
+
+  :root {
+      --primary-color: #302AE6;
+      --secondary-color: #2f3239;
+      --font-color: #e0dce4;
+      --bg-color: #292a30;
+      --heading-color: #292922;
+  }
+  [data-theme="light"] {
+      --primary-color: #9A97F3;
+      --secondary-color: #818cab;
+      --font-color: #e1e1ff;
+      --bg-color: #161625;
+      --heading-color: #818cab;
+  }
+  .equalDivide tr td {
+    width: 25%;
+  }
   .bottom {
     padding: 20px;
   }
   h2 {
     font-weight: bold;
   }
-  /* 
-  pre {
-    user-select: all;
-    -moz-user-select: all;
-    -webkit-user-select: all;
-    margin-top: 0px;
-    padding-top: 0px;
-  }
-  */ 
 
   .clickableButton {
     width: 100%;
     height: 100%;
     border: none;
-    background-color: #2f3239;
+    background-color: var(--secondary-color);
     color: #e0dce4;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 25px;
@@ -309,7 +342,7 @@
   }
 
   .export {
-    background-color: #2f3239;
+    background-color: var(--secondary-color);
     color: #e0dce4;
     transition: 500ms;
     border: none;
@@ -328,7 +361,7 @@
     width: 100%;
     height: 100%;
     border: none;
-    background-color: #2f3239;
+    background-color: var(--secondary-color);
     color: #e0dce4;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 25px;
@@ -422,8 +455,8 @@
     width: 500px;
     margin: 0 auto;
     border-collapse: collapse;
-    border: 4px solid #292a30;
-    background-color: #2f3239;
+    border: 4px solid var(--bg-color);
+    background-color: var(--secondary-color);
     opacity: 1;
   }
 
@@ -435,9 +468,9 @@
 
   td,
   th {
-    border: 4px solid #292a30;
+    border: 4px solid var(--bg-color);
     overflow: hidden;
-    text-align:center;
+    text-align: center;
   }
   input {
     margin: auto;
@@ -446,7 +479,7 @@
     border: none;
     align-self: center;
     box-sizing: border-box;
-    background-color: #2f3239;
+    background-color: var(--secondary-color);
     color: #e0dce4;
   }
 
@@ -464,14 +497,44 @@
 
   :global(body) {
     font-family: "Rubik", sans-serif;
-    background-color: #292a30;
+    background-color: var(--bg-color);
     color: #e0dce4;
-    
   }
   button {
     font-family: "Rubik", sans-serif;
   }
   input {
     font-family: "Rubik", sans-serif;
+  }
+
+  .light-mode {
+    input {
+      color: #333;
+      background-color: #c5c3c7;
+    }
+    th {
+      border: 4px solid #b4b5bd;
+    }
+    table {
+      border: 4px solid #b4b5bd;
+      background-color: #9fa2a9;
+    }
+    :global(body) {
+      background-color: #b4b5bd;
+      color: #333;
+    }
+    .clickableButton {
+      background-color: #9fa2a9;
+    }
+    .export {
+      background-color: #9fa2a9;
+      color: #333;
+    }
+    .clickableButtonRemove {
+      background-color: #9fa2a9;
+    }
+    input {
+      background-color: #9fa2a9;
+    }
   }
 </style>

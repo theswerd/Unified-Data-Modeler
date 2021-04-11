@@ -42,7 +42,7 @@ import ts from "../logic/export/ts";
 
   let removeParameter = (index: number) => {
     if (parameters.length == 1) {
-      return
+      addParameter()
     }
     parameters.splice(
       index,

@@ -53,14 +53,14 @@ import ts from "../logic/export/ts";
 
   let clear = () => {
     parameters = []
-
+    addParameter()
   }
 
   let addParameter = () => {
     parameters.push({
       name: "",
       type: flatMap(syntaxTree)[0],
-      required: true,
+      required: false,
     });
     console.log("PaRAMETERS", parameters);
     parameters = parameters;
@@ -226,7 +226,7 @@ import ts from "../logic/export/ts";
     left: 0;
     height: 100%;
     width: 100%;
-    transition-duration: 500ms;
+    transition-duration: 250ms;
   }
 
   /* On mouse-over, add a grey background color */
@@ -236,7 +236,7 @@ import ts from "../logic/export/ts";
 
   .container input:checked ~ .checkmark {
     background-color: #00b518;
-    transition-duration: 500ms;
+    transition-duration: 250ms;
   }
 
   .checkmark:after {
@@ -261,7 +261,7 @@ import ts from "../logic/export/ts";
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
-  transition-duration: 500ms;
+  transition-duration: 250ms;
 }
   table {
     margin: 0 auto;

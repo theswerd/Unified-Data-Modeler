@@ -29,7 +29,7 @@ const io = new Server(httpServer, {
 const defaultParameters: Array<Parameter> = [
   {
     name: "Price",
-    required: true,
+    required: false,
     type: flatSyntax[0],
   },
 ];

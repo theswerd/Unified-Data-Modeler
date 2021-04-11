@@ -41,6 +41,9 @@ import ts from "../logic/export/ts";
   });
 
   let removeParameter = (index: number) => {
+    if (parameters.length == 1) {
+      return
+    }
     parameters.splice(
       index,
       1
@@ -157,7 +160,7 @@ import ts from "../logic/export/ts";
             /></label
           ></td
         >
-        <td><button class="removeButton" on:click={() => removeParameter(parameter)}>×</button></td>
+        <td><button class="removeButton" on:click={() => removeParameter(index)}>×</button></td>
       </tr>
     {/each}
   {/if}

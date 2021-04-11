@@ -28,9 +28,9 @@ const io = new Server(httpServer, {
 });
 const defaultParameters: Array<Parameter> = [
   {
-    name: "Price",
-    required: true,
-    type: flatSyntax[1],
+    name: "price",
+    required: false,
+    type: flatSyntax[0],
   },
 ];
 const defaultModelName = "MyModelName";
@@ -44,12 +44,12 @@ io.on("connection", (socket) => {
   socket.on("parameters", (value) => {
     parameters = value;
     console.log("NEW PARAMETERS", Date.now(), parameters);
-    socket.broadcast.emit("parameters", parameters);
+    socket.emit("parameters", parameters);
   });
 
   socket.on("modelName", (value) => {
     modelName = value;
-    socket.broadcast.emit("modelName", modelName);
+    socket.emit("modelName", modelName);
   });
 });
 

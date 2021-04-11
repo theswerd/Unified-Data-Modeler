@@ -3,23 +3,33 @@
   import type { Socket } from "socket.io-client";
   import { saveAs } from "file-saver";
   import * as yaml from "js-yaml";
-
   import { onMount } from "svelte";
   import Nav from "../components/Nav.svelte";
   import AutoComplete from '../components/AutoComplete.svelte';
   import type { BaseParameter, Parameter } from "../models/parameter";
   import { flatSyntax, flatMap, syntaxTree } from "../logic/syntax_tree";
   import udmYaml from "../logic/export/udm.yaml";
+  import ts from "../logic/export/udm.ts";
+  import dart from "../logic/export/udm.dart";
+  import rust from "../logic/export/udm.rs";
+
+  import { Highlight } from "svelte-highlight";
+  import { typescript, rust as rustHighlight, dart as dartHighlight, yaml as yamlHighlight } from "svelte-highlight/languages";
+  import { irBlack } from "svelte-highlight/styles";
 
   let parameters: Array<Parameter>;
   let modelName: string;
   let socket: Socket;
   let modelNameFromNetwork: boolean = false;
-
+  let files: FileList;
   let parametersFromNetwork: boolean = false;
   onMount(() => {
     console.log("MOUNTED");
     socket = io();
+    console.log("CONNECTED 1", socket.connected);
+
+    socket.open();
+    console.log("CONNECTED 2", socket.connected);
 
     socket.on("modelName", (newModelName) => {
       if (modelName != newModelName) {
@@ -28,6 +38,7 @@
       }
     });
     socket.on("parameters", (newParameters) => {
+      console.log("PARAMETERS FROM SOCKET")
       console.log("PARAMETERS", parameters);
       if (parameters != newParameters) {
         parametersFromNetwork = true;
@@ -36,27 +47,29 @@
     });
 
     socket.on("disconnect", () => {
+      console.warn('DISCONNECTED')
       socket.connect();
     });
   });
 
-  let removeParameter = (parameter: Parameter) => {
-    parameters.slice(
-      parameters.findIndex((p) => p == parameter),
-      1
-    );
+  let removeParameter = (index: number) => {
+    if (parameters.length == 1) {
+      addParameter();
+    }
+    parameters.splice(index, 1);
     parameters = parameters;
   };
 
   let clear = () => {
-    parameters = []
-  }
+    parameters = [];
+    addParameter();
+  };
 
   let addParameter = () => {
     parameters.push({
       name: "",
       type: flatMap(syntaxTree)[0],
-      required: true,
+      required: false,
     });
     console.log("PARAMETERS", parameters);
     parameters = parameters;
@@ -70,10 +83,42 @@
 
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.yaml");
   };
+  $: udmCode = parameters != null ? udmYaml(modelName, [...parameters]) : "// Loading";
+  $: tsCode =
+    parameters != null ? ts(modelName, [...parameters], false) : "// Loading";
+  let exportTS = () => {
+    console.log("logggg");
+    var blob = new Blob([ts(modelName, [...parameters])], {
+      type: "text/plain;charset=utf-8",
+    });
 
-  let uploadFile = (files) => {
+    saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.ts");
+  };
+  $: dartCode =
+    parameters != null ? dart(modelName, [...parameters], false) : "// Loading";
+  let exportDart = () => {
+    console.log("logggg");
+    var blob = new Blob([dart(modelName, [...parameters])], {
+      type: "text/plain;charset=utf-8",
+    });
+    saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.dart");
+  };
+
+  $: rustCode =
+    parameters != null ? rust(modelName, [...parameters], false) : "// Loading";
+  let exportRust = () => {
+    console.log("logggg");
+    var blob = new Blob([rust(modelName, [...parameters])], {
+      type: "text/plain;charset=utf-8",
+    });
+
+    saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.rs");
+  };
+
+  $: {
     console.log("FILES", files);
     if (files != undefined && files != null && (files?.length ?? 0) != 0) {
+      console.log("INSIDEEEE");
       files
         .item(0)
         .text()
@@ -81,17 +126,19 @@
           console.log("FILE TEXT", text);
           const doc = yaml.load(text);
           console.log(doc);
-          modelName = doc.name;
-          parameters = (doc.parameters as Array<BaseParameter>).map((base) => {
-            return {
-              name: flatSyntax.find((value) => value.value == base.type).name,
-              type: flatSyntax.find((value) => value.value == base.type),
-              required: base.required,
-            } as Parameter;
-          });
+          modelName = doc["name"];
+          parameters = (doc["parameters"] as Array<BaseParameter>).map(
+            (base) => {
+              return {
+                name: flatSyntax.find((value) => value.value == base.type).name,
+                type: flatSyntax.find((value) => value.value == base.type),
+                required: base.required,
+              } as Parameter;
+            }
+          );
         });
     }
-  };
+  }
 
   $: parametersFromNetwork
     ? (parametersFromNetwork = false)
@@ -106,19 +153,21 @@
 </script>
 
 <svelte:head>
-  <title>Unified Data Modeler</title>
+  <title>UDM</title>
+  {@html irBlack}
 </svelte:head>
-<Nav />
+<img src="./favicon.png" height="100px" style="padding: 20px; margin: 0 auto; display: block;" alt="logo" />
 <table>
   <tr>
-    <th colspan="3"
-      ><input placeholder="Model Name" bind:value={modelName} /></th
+    <th colspan="4"
+      ><input style="text-align:center" placeholder="Model Name" bind:value={modelName} /></th
     >
   </tr>
   <tr>
     <th> Parameter </th>
     <th> Type </th>
     <th> Require </th>
+    <th> Remove </th>
   </tr>
   {#if parameters != null}
     {#each parameters as parameter, index}
@@ -129,7 +178,7 @@
           ><!-- svelte-ignore a11y-no-onchange -->
           <select
             name="DataTypes"
-            bind:value={parameter.type}
+            bind:value={parameter.type.value}
             on:change={(value) => {
               //parameters[index] = value.
               console.log("SMH", value, index);
@@ -148,20 +197,138 @@
             /></label
           ></td
         >
-        <td><button on:click={() => removeParameter(parameter)}>x</button></td>
+        <td
+          ><button
+            class="clickableButtonRemove"
+            on:click={() => removeParameter(index)}>×</button
+          ></td
+        >
       </tr>
     {/each}
   {/if}
+  <tr>
+    <th><button class="clickableButton" on:click={addParameter}>+</button></th>
+    <th colspan="2" />
+    <th style="background-color:#ff5555"
+      ><button class="writtenButton" on:click={clear}>Clear</button></th
+    >
+  </tr>
 </table>
-<table>
-  <tr />
+<table style="margin-top:20px" class="equalDivide" cellpadding="0" cellspacing="0" width="100%" border-radius="0">
+  <tr>
+     <th class="export">Export TS</th>
+     <th class="export">Export Dart</th>
+     <th class="export">Export Rust</th>
+     <th class="export">Export UDM</th>
+  </tr>
+  <tr>
+    <td colspan="4">Import UDM</td>
+  </tr>
 </table>
-<button on:click={addParameter}>Add Parameter</button>
 <button on:click={exportModel}>Export</button>
-<input type="file" on:change={uploadFile} accept=".yaml" />
+<button on:click={exportTS}>Export TS</button>
+<button on:click={exportDart}>Export Dart</button>
+<button on:click={exportRust}>Export Rust</button>
+<input type="file" accept=".yaml" bind:files />
 <button on:click={clear}>Clear</button>
+<br />
+<section class="bottom">
+  <h2>TypeScript</h2>
+  <Highlight language={typescript} code={tsCode} />
+
+  <h2>Rust</h2>
+  <Highlight language={rustHighlight} code={rustCode} />
+  <h2>Dart</h2>
+  <Highlight language={dartHighlight} code={dartCode} />
+  <h2>UDM</h2>
+  <Highlight language={yamlHighlight} code={udmCode} />
+</section>
+
 <style type="text/scss">
   @import '../styles/vars.scss';
+  .equalDivide tr td { width:25%; }
+  .bottom {
+    padding: 20px;
+  }
+  h2 {
+    font-weight: bold;
+  }
+  pre {
+    user-select: all;
+    -moz-user-select: all;
+    -webkit-user-select: all;
+    margin-top: 0px;
+    padding-top: 0px;
+  }
+
+  .clickableButton {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: #2f3239;
+    color: #e0dce4;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    transition: 500ms;
+  }
+  .clickableButton:focus {
+    outline: 0;
+  }
+  .clickableButton:hover {
+    cursor: pointer;
+    color: #00b518;
+    transition-duration: 500ms;
+  }
+
+  .export {
+    background-color: #2f3239;
+    color: #e0dce4;
+    transition: 500ms;
+  }
+  .export:focus {
+    outline: 0;
+  }
+  .export:hover {
+    cursor: pointer;
+    color: #00b518;
+    transition-duration: 500ms;
+  }
+
+  .clickableButtonRemove {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: #2f3239;
+    color: #e0dce4;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    transition: 500ms;
+  }
+  .clickableButtonRemove:focus {
+    outline: 0;
+  }
+  .clickableButtonRemove:hover {
+    cursor: pointer;
+    color: #ff5555;
+    transition-duration: 500ms;
+  }
+
+  .writtenButton {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: #ff5555;
+    color: #e0dce4;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .writtenButton:focus {
+    outline: 0;
+  }
+  .writtenButton:hover {
+    cursor: pointer;
+  }
+
   .container {
     display: block;
     position: relative;
@@ -178,14 +345,13 @@
     height: 0;
     width: 0;
   }
-
   .checkmark {
     position: absolute;
     top: 0;
     left: 0;
     height: 100%;
     width: 100%;
-    transition-duration: 500ms;
+    transition-duration: 250ms;
   }
 
   /* On mouse-over, add a grey background color */
@@ -195,7 +361,7 @@
 
   .container input:checked ~ .checkmark {
     background-color: #00b518;
-    transition-duration: 500ms;
+    transition-duration: 250ms;
   }
 
   .checkmark:after {
@@ -208,21 +374,22 @@
     display: block;
   }
 
-.container .checkmark:after {
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  top: 4px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  transition-duration: 500ms;
-}
+  .container .checkmark:after {
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: 4px;
+    width: 5px;
+    height: 10px;
+    border: solid #e0dce4;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    transition-duration: 250ms;
+  }
   table {
+    width: 500px;
     margin: 0 auto;
     border-collapse: collapse;
     border: 4px solid $bg-color;
@@ -240,6 +407,7 @@
   th  {
     border: 4px solid $bg-color;
     overflow: hidden;
+    text-align:center;
   }
   td {
     overflow: visible;
@@ -256,7 +424,7 @@
   }
 
   th {
-    text-align: left;
+    text-align: center;
     padding: 8px;
   }
 
@@ -271,6 +439,7 @@
     font-family: "Rubik", sans-serif;
     background-color: $bg-color;
     color: #e0dce4;
+    
   }
   button {
     font-family: "Rubik", sans-serif;

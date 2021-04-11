@@ -10,7 +10,7 @@ export interface Language {
   readonly syntax: string;
 }
 
-enum Languages {
+export enum Languages {
   TypeScript,
   Rust,
   Dart,
@@ -53,11 +53,10 @@ export const syntaxTree: DataType = {
     {
       name: "List",
       value: "list",
-      subTypes: [],
       languages: [
         {
           language: Languages.Rust,
-          syntax: "Vec<str>",
+          syntax: "Vec<Box<dyn Any>>",
         },
         {
           language: Languages.Dart,
@@ -65,7 +64,47 @@ export const syntaxTree: DataType = {
         },
         {
           language: Languages.TypeScript,
-          syntax: "Array",
+          syntax: "Array<any>",
+        },
+      ],
+      subTypes: [
+        {
+          name: "List of Strings",
+          value: "list_of_strings",
+          subTypes: [],
+          languages: [
+            {
+              language: Languages.Rust,
+              syntax: "Vec<str>",
+            },
+            {
+              language: Languages.Dart,
+              syntax: "List<String>",
+            },
+            {
+              language: Languages.TypeScript,
+              syntax: "Array<string>",
+            },
+          ],
+        },
+        {
+          name: "List of Numbers",
+          value: "list_of_numbers",
+          subTypes: [],
+          languages: [
+            {
+              language: Languages.Rust,
+              syntax: "Vec<fsize>",
+            },
+            {
+              language: Languages.Dart,
+              syntax: "List<double>",
+            },
+            {
+              language: Languages.TypeScript,
+              syntax: "Array<number>",
+            },
+          ],
         },
       ],
     },
@@ -79,7 +118,7 @@ export const syntaxTree: DataType = {
           subTypes: [
             {
               name: "Unsigned Integer",
-              value: "unsignedInteger",
+              value: "unsigned_integer",
               subTypes: [],
               languages: [
                 {
@@ -133,13 +172,16 @@ export const syntaxTree: DataType = {
   ],
 };
 
-export let flatMap = (dataType: DataType, flatTypesBase: Array<DataType> = [syntaxTree]) => {
+export let flatMap = (
+  dataType: DataType,
+  flatTypesBase: Array<DataType> = [syntaxTree]
+) => {
   let flatTypes: Array<DataType> = flatTypesBase;
   dataType.subTypes.forEach((type) => {
     flatTypes.push(type);
     flatTypes = flatMap(type, flatTypes);
   });
-  return flatTypes
+  return flatTypes;
 };
 
 export const flatSyntax = flatMap(syntaxTree);

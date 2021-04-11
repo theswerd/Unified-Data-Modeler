@@ -153,7 +153,7 @@
 <table>
   <tr>
     <th colspan="4"
-      ><input placeholder="Model Name" bind:value={modelName} /></th
+      ><input style="text-align:center" placeholder="Model Name" bind:value={modelName} /></th
     >
   </tr>
   <tr>
@@ -366,7 +366,7 @@
   }
   input {
     margin: auto;
-    text-align: center;
+    text-align: left;
     padding: 5px;
     border: none;
     align-self: center;

@@ -1,7 +1,9 @@
 <script lang="ts">
   import { flatSyntax } from "../logic/syntax_tree";
-import Index from "../routes/index.svelte";
+  import Index from "../routes/index.svelte";
   import { clickOutside } from "./clickOutside.js";
+  export let parameter;
+  console.log(parameter)
   //   import {onMount} from 'svelte';
   //   onMount(() => {
   //       document.querySelector(".dropdown-item").classList.add('active');
@@ -11,6 +13,15 @@ import Index from "../routes/index.svelte";
   //   $: {
   //       if(document.getElementsByClassName("dropdown-item")).
   //   }
+  function getDataType(input){
+    
+    let value = ( flatSyntax.filter((type) =>
+      type.name.toLowerCase().includes(input.toLowerCase())
+    )[0]?.value || 'text')
+    console.log(value)
+    return value;
+  }
+  $: parameter.type.value = getDataType(input)
   $: dataTypes = flatSyntax.filter((type) =>
     type.name.toLowerCase().includes(input.toLowerCase())
   );

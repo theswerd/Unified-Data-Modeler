@@ -173,23 +173,8 @@
     {#each parameters as parameter, index}
       <tr>
         <td><input bind:value={parameter.name} /></td>
-        <td><AutoComplete/></td>
-        <td
-          ><!-- svelte-ignore a11y-no-onchange -->
-          <select
-            name="DataTypes"
-            bind:value={parameter.type.value}
-            on:change={(value) => {
-              //parameters[index] = value.
-              console.log("SMH", value, index);
-            }}
-            contenteditable
-          >
-            {#each flatSyntax as type}
-              <option value={type.value}>{type.name}</option>
-            {/each}
-          </select></td
-        >
+        <td><AutoComplete parameter={parameter}/></td>
+
         <td
           ><label class="container"
             ><input bind:checked={parameter.required} type="checkbox" /><span
@@ -253,13 +238,13 @@
   h2 {
     font-weight: bold;
   }
-  pre {
-    user-select: all;
-    -moz-user-select: all;
-    -webkit-user-select: all;
-    margin-top: 0px;
-    padding-top: 0px;
-  }
+  // pre {
+  //   user-select: all;
+  //   -moz-user-select: all;
+  //   -webkit-user-select: all;
+  //   margin-top: 0px;
+  //   padding-top: 0px;
+  // }
 
   .clickableButton {
     width: 100%;

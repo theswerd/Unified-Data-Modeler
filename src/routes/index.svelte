@@ -200,7 +200,7 @@
   <tr>
     <th><button class="clickableButton" on:click={addParameter}>+</button></th>
     <th colspan="2" />
-    <th style="background-color:red"
+    <th style="background-color:#ff5555"
       ><button class="writtenButton" on:click={clear}>Clear</button></th
     >
   </tr>
@@ -271,7 +271,7 @@
     width: 100%;
     height: 100%;
     border: none;
-    background-color: red;
+    background-color: #ff5555;
     color: #e0dce4;
     font-size: 16px;
     font-weight: bold;

@@ -146,7 +146,7 @@
 </script>
 
 <svelte:head>
-  <title>Unified Data Modeler</title>
+  <title>UDM</title>
   {@html irBlack}
 </svelte:head>
 <img src="./favicon.png" height="100px" style="padding: 20px; margin: 0 auto; display: block;" alt="logo" />
@@ -206,6 +206,17 @@
     >
   </tr>
 </table>
+<table style="margin-top:20px" class="equalDivide" cellpadding="0" cellspacing="0" width="100%" border-radius="0">
+  <tr>
+     <th>Export TS</th>
+     <th>Export Dart</th>
+     <th>Export Rust</th>
+     <th>Export UDM</th>
+  </tr>
+  <tr>
+    <td colspan="4">Import UDM</td>
+  </tr>
+</table>
 <button on:click={exportModel}>Export</button>
 <button on:click={exportTS}>Export TS</button>
 <button on:click={exportDart}>Export Dart</button>
@@ -226,6 +237,7 @@
 </section>
 
 <style>
+  .equalDivide tr td { width:25%; }
   .bottom {
     padding: 20px;
   }
@@ -239,19 +251,7 @@
     margin-top: 0px;
     padding-top: 0px;
   }
-  .fullsize {
-    height: 100%;
-  }
-  .removeButton {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background-color: #2f3239;
-    color: white;
-  }
-  .fullsize {
-    height: 100%;
-  }
+
   .clickableButton {
     width: 100%;
     height: 100%;
@@ -300,15 +300,6 @@
     height: 0;
     width: 0;
   }
-
-  .removeMark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-color: red;
-  }
   .checkmark {
     position: absolute;
     top: 0;
@@ -353,6 +344,7 @@
     transition-duration: 250ms;
   }
   table {
+    width: 500px;
     margin: 0 auto;
     border-collapse: collapse;
     border: 4px solid #292a30;
@@ -370,10 +362,11 @@
   th {
     border: 4px solid #292a30;
     overflow: hidden;
+    text-align:center;
   }
   input {
     margin: auto;
-    text-align: left;
+    text-align: center;
     padding: 5px;
     border: none;
     align-self: center;
@@ -383,7 +376,7 @@
   }
 
   th {
-    text-align: left;
+    text-align: center;
     padding: 8px;
   }
 

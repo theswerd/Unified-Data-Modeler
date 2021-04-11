@@ -186,28 +186,33 @@
           ></td
         >
         <td
-          ><button class="removeButton" on:click={() => removeParameter(index)}
-            >×</button
+          ><button
+            class="clickableButton"
+            on:click={() => removeParameter(index)}>×</button
           ></td
         >
       </tr>
     {/each}
   {/if}
+  <tr>
+    <th><button class="clickableButton" on:click={addParameter}>+</button></th>
+    <th colspan="2" />
+    <th style="background-color:red"
+      ><button class="writtenButton" on:click={clear}>Clear</button></th
+    >
+  </tr>
 </table>
-<table>
-  <tr />
-</table>
-<button on:click={addParameter}>Add Parameter</button>
 <button on:click={exportModel}>Export</button>
 <button on:click={exportTS}>Export TS</button>
 <button on:click={exportDart}>Export Dart</button>
 <button on:click={exportRust}>Export Rust</button>
 <input type="file" accept=".yaml" bind:files />
 <button on:click={clear}>Clear</button>
-<br>
+<br />
 
 <pre>{tsCode}</pre>
 <pre>{rustCode}</pre>
+<pre>{dartCode}</pre>
 
 <style>
   .fullsize {
@@ -219,15 +224,42 @@
     border: none;
     background-color: #2f3239;
     color: white;
+  }
+  .fullsize {
+    height: 100%;
+  }
+  .clickableButton {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: #2f3239;
+    color: #e0dce4;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 25px;
   }
-  .removeButton:focus {
+  .clickableButton:focus {
     outline: 0;
   }
-  .removeButton:hover {
+  .clickableButton:hover {
     cursor: pointer;
   }
+
+  .writtenButton {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: red;
+    color: #e0dce4;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .writtenButton:focus {
+    outline: 0;
+  }
+  .writtenButton:hover {
+    cursor: pointer;
+  }
+
   .container {
     display: block;
     position: relative;
@@ -289,7 +321,7 @@
     top: 4px;
     width: 5px;
     height: 10px;
-    border: solid white;
+    border: solid #e0dce4;
     border-width: 0 3px 3px 0;
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);

@@ -36,6 +36,7 @@
       }
     });
     socket.on("parameters", (newParameters) => {
+      console.log("PARAMETERS FROM SOCKET")
       console.log("PARAMETERS", parameters);
       if (parameters != newParameters) {
         parametersFromNetwork = true;

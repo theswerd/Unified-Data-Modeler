@@ -8,11 +8,18 @@
   import { flatSyntax, flatMap, syntaxTree } from "../logic/syntax_tree";
   import udmYaml from "../logic/export/udm.yaml";
   import ts from "../logic/export/udm.ts";
+  import cs from "../logic/export/udm.cs";
   import dart from "../logic/export/udm.dart";
   import rust from "../logic/export/udm.rs";
 
   import { Highlight } from "svelte-highlight";
-  import { typescript, rust as rustHighlight, dart as dartHighlight, yaml as yamlHighlight } from "svelte-highlight/languages";
+  import {
+    typescript,
+    rust as rustHighlight,
+    dart as dartHighlight,
+    yaml as yamlHighlight,
+    cs as csHighlight,
+  } from "svelte-highlight/languages";
   import { irBlack } from "svelte-highlight/styles";
 
   let parameters: Array<Parameter>;
@@ -36,7 +43,7 @@
       }
     });
     socket.on("parameters", (newParameters) => {
-      console.log("PARAMETERS FROM SOCKET")
+      console.log("PARAMETERS FROM SOCKET");
       console.log("PARAMETERS", parameters);
       if (parameters != newParameters) {
         parametersFromNetwork = true;
@@ -45,7 +52,7 @@
     });
 
     socket.on("disconnect", () => {
-      console.warn('DISCONNECTED')
+      console.warn("DISCONNECTED");
       socket.connect();
     });
   });
@@ -74,7 +81,6 @@
   };
 
   let exportModel = () => {
-    console.log("logggg");
     var blob = new Blob([udmYaml(modelName, parameters)], {
       type: "text/plain;charset=utf-8",
     });
@@ -92,10 +98,18 @@
 
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.ts");
   };
+  $: csCode =
+    parameters != null ? cs(modelName, [...parameters], false) : "// Loading";
+  let exportCS = () => {
+    var blob = new Blob([cs(modelName, [...parameters])], {
+      type: "text/plain;charset=utf-8",
+    });
+    saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.cs");
+  };
+
   $: dartCode =
     parameters != null ? dart(modelName, [...parameters], false) : "// Loading";
   let exportDart = () => {
-    console.log("logggg");
     var blob = new Blob([dart(modelName, [...parameters])], {
       type: "text/plain;charset=utf-8",
     });
@@ -105,7 +119,6 @@
   $: rustCode =
     parameters != null ? rust(modelName, [...parameters], false) : "// Loading";
   let exportRust = () => {
-    console.log("logggg");
     var blob = new Blob([rust(modelName, [...parameters])], {
       type: "text/plain;charset=utf-8",
     });
@@ -121,7 +134,6 @@
         .item(0)
         .text()
         .then((text) => {
-          console.log("FILE TEXT", text);
           const doc = yaml.load(text);
           console.log(doc);
           modelName = doc["name"];
@@ -137,12 +149,18 @@
         });
     }
   }
-
-  $: parametersFromNetwork
-    ? (parametersFromNetwork = false)
-    : parameters != null
-    ? socket?.emit("parameters", parameters)
-    : null;
+  $: {
+    console.log("PARAMETERS", parameters);
+    if (parametersFromNetwork) {
+      console.log("FROM NETWORK NOT EMITTING");
+      parametersFromNetwork = false;
+    } else if (parameters != null) {
+      console.log("PARAMETERS EMITTED");
+      socket?.emit("parameters", parameters);
+    } else {
+      console.log("NOT EMITTING");
+    }
+  }
   $: modelNameFromNetwork
     ? (modelNameFromNetwork = false)
     : modelName != null
@@ -213,30 +231,28 @@
 </table>
 <table style="margin-top:20px" class="equalDivide" cellpadding="0" cellspacing="0" width="100%" border-radius="0">
   <tr>
-     <th class="export">Export TS</th>
-     <th class="export">Export Dart</th>
-     <th class="export">Export Rust</th>
-     <th class="export">Export UDM</th>
+    <th><button class="export" on:click={exportTS}>Export TS</button></th>
+    <th><button class="export" on:click={exportRust}>Export Rust</button></th>
+    <th><button class="export" on:click={exportDart}>Export Dart</button></th>
+    <th><button class="export" on:click={exportCS}>Export C#</button></th>
+    <th><button class="export" on:click={exportModel}>Export UDM</button></th>
   </tr>
   <tr>
-    <td colspan="4">Import UDM</td>
+    <th colspan="5"><label class="container"><input type="file" accept=".yaml" bind:files /><span
+      class="export"
+    />Import UDM</label></th>
   </tr>
 </table>
-<button on:click={exportModel}>Export</button>
-<button on:click={exportTS}>Export TS</button>
-<button on:click={exportDart}>Export Dart</button>
-<button on:click={exportRust}>Export Rust</button>
-<input type="file" accept=".yaml" bind:files />
-<button on:click={clear}>Clear</button>
 <br />
 <section class="bottom">
   <h2>TypeScript</h2>
   <Highlight language={typescript} code={tsCode} />
-
   <h2>Rust</h2>
   <Highlight language={rustHighlight} code={rustCode} />
   <h2>Dart</h2>
   <Highlight language={dartHighlight} code={dartCode} />
+  <h2>C#</h2>
+  <Highlight language={csHighlight} code={csCode} />
   <h2>UDM</h2>
   <Highlight language={yamlHighlight} code={udmCode} />
 </section>
@@ -249,6 +265,7 @@
   h2 {
     font-weight: bold;
   }
+  /* 
   pre {
     user-select: all;
     -moz-user-select: all;
@@ -256,6 +273,7 @@
     margin-top: 0px;
     padding-top: 0px;
   }
+  */ 
 
   .clickableButton {
     width: 100%;
@@ -280,6 +298,8 @@
     background-color: #2f3239;
     color: #e0dce4;
     transition: 500ms;
+    border: none;
+    text-align: center;
   }
   .export:focus {
     outline: 0;

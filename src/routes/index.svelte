@@ -3,15 +3,17 @@
   import type { Socket } from "socket.io-client";
   import { saveAs } from "file-saver";
   import * as yaml from "js-yaml";
-
   import { onMount } from "svelte";
-  import Nav from "../components/Nav.svelte";
   import type { BaseParameter, Parameter } from "../models/parameter";
   import { flatSyntax, flatMap, syntaxTree } from "../logic/syntax_tree";
   import udmYaml from "../logic/export/udm.yaml";
   import ts from "../logic/export/udm.ts";
   import dart from "../logic/export/udm.dart";
   import rust from "../logic/export/udm.rs";
+
+  import { Highlight } from "svelte-highlight";
+  import { typescript, rust as rustHighlight, dart as dartHighlight, yaml as yamlHighlight } from "svelte-highlight/languages";
+  import { irBlack } from "svelte-highlight/styles";
 
   let parameters: Array<Parameter>;
   let modelName: string;
@@ -73,7 +75,7 @@
 
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.yaml");
   };
-
+  $: udmCode = parameters != null ? udmYaml(modelName, [...parameters]) : "// Loading";
   $: tsCode =
     parameters != null ? ts(modelName, [...parameters], false) : "// Loading";
   let exportTS = () => {
@@ -144,8 +146,9 @@
 
 <svelte:head>
   <title>Unified Data Modeler</title>
+  {@html irBlack}
 </svelte:head>
-<Nav />
+<img src="./favicon.png" height="160px" style="padding: 20px"/>
 <table>
   <tr>
     <th colspan="4"
@@ -210,26 +213,28 @@
 <button on:click={clear}>Clear</button>
 <br />
 <section class="bottom">
-<h2>TypeScript</h2>
-<pre>{tsCode}</pre>
-<h2>Rust</h2>
-<pre>{rustCode}</pre>
-<h2>Dart</h2>
-<pre>{dartCode}</pre>
+  <h2>TypeScript</h2>
+  <Highlight language={typescript} code={tsCode} />
+
+  <h2>Rust</h2>
+  <Highlight language={rustHighlight} code={rustCode} />
+  <h2>Dart</h2>
+  <Highlight language={dartHighlight} code={dartCode} />
+  <h2>UDM</h2>
+  <Highlight language={yamlHighlight} code={udmCode} />
 </section>
+
 <style>
   .bottom {
     padding: 20px;
-
-    
   }
   h2 {
     font-weight: bold;
   }
-  pre{
+  pre {
     user-select: all;
     -moz-user-select: all;
-    -webkit-user-select:all;
+    -webkit-user-select: all;
     margin-top: 0px;
     padding-top: 0px;
   }
@@ -392,6 +397,7 @@
     font-family: "Rubik", sans-serif;
     background-color: #292a30;
     color: #e0dce4;
+    
   }
   button {
     font-family: "Rubik", sans-serif;

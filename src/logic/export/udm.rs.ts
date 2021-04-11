@@ -24,7 +24,7 @@ use serde::{Serialize, Deserialize};
       .map((value) => {
         return (
           "    " +
-          name +
+          value.name.toLowerCase() +
           ": " +
           (value.required ? "" : "Option<") +
           type(value.type, Languages.Rust) +

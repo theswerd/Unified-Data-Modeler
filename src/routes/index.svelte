@@ -89,7 +89,8 @@
 
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.yaml");
   };
-  $: udmCode = parameters != null ? udmYaml(modelName, [...parameters]) : "// Loading";
+  $: udmCode =
+    parameters != null ? udmYaml(modelName, [...parameters]) : "// Loading";
   $: tsCode =
     parameters != null ? ts(modelName, [...parameters], false) : "// Loading";
   let exportTS = () => {
@@ -118,7 +119,8 @@
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.dart");
   };
 
-  $: javaCode = parameters != null ? java(modelName, [...parameters], false) : "// Loading";
+  $: javaCode =
+    parameters != null ? java(modelName, [...parameters], false) : "// Loading";
   let exportJava = () => {
     var blob = new Blob([dart(modelName, [...parameters])], {
       type: "text/plain;charset=utf-8",
@@ -182,97 +184,160 @@
   <title>UDM</title>
   {@html irBlack}
 </svelte:head>
-<img src="./favicon.png" height="100px" style="padding: 20px; margin: 0 auto; display: block;" alt="logo" />
-<table>
-  <tr>
-    <th colspan="4"
-      ><input style="text-align:center" placeholder="Model Name" bind:value={modelName} /></th
-    >
-  </tr>
-  <tr>
-    <th> Parameter </th>
-    <th> Type </th>
-    <th> Require </th>
-    <th> Remove </th>
-  </tr>
-  {#if parameters != null}
-    {#each parameters as parameter, index}
+<div class="wrapper">
+  <div style="height: 100%; overflow: scroll;">
+    <img
+      src="./favicon.png"
+      height="100px"
+      style="padding: 20px; margin: 0 auto; display: block;"
+      alt="logo"
+    />
+    <table>
       <tr>
-        <td><input bind:value={parameter.name} /></td>
-        <td
-          ><!-- svelte-ignore a11y-no-onchange -->
-          <select
-            name="DataTypes"
-            bind:value={parameter.type.value}
-            on:change={(value) => {
-              //parameters[index] = value.
-              console.log("SMH", value, index);
-            }}
-            contenteditable
-          >
-            {#each flatSyntax as type}
-              <option value={type.value}>{type.name}</option>
-            {/each}
-          </select></td
-        >
-        <td
-          ><label class="container"
-            ><input bind:checked={parameter.required} type="checkbox" /><span
-              class="checkmark"
-            /></label
-          ></td
-        >
-        <td
-          ><button
-            class="clickableButtonRemove"
-            on:click={() => removeParameter(index)}>×</button
-          ></td
+        <th colspan="4"
+          ><input
+            style="text-align:center"
+            placeholder="Model Name"
+            bind:value={modelName}
+          /></th
         >
       </tr>
-    {/each}
-  {/if}
-  <tr>
-    <th><button class="clickableButton" on:click={addParameter}>+</button></th>
-    <th colspan="2" />
-    <th style="background-color:#ff5555"
-      ><button class="writtenButton" on:click={clear}>Clear</button></th
+      <tr>
+        <th> Parameter </th>
+        <th> Type </th>
+        <th> Require </th>
+        <th> Remove </th>
+      </tr>
+      {#if parameters != null}
+        {#each parameters as parameter, index}
+          <tr>
+            <td><input bind:value={parameter.name} /></td>
+            <td
+              ><!-- svelte-ignore a11y-no-onchange -->
+              <select
+                name="DataTypes"
+                style="color: white; background-color: transparent; border: none; outline: none;"
+                bind:value={parameter.type.value}
+                on:change={(value) => {
+                  //parameters[index] = value.
+                  console.log("SMH", value, index);
+                }}
+                contenteditable
+              >
+                {#each flatSyntax as type}
+                  <option style="background-color: grey;" value={type.value}
+                    >{type.name}</option
+                  >
+                {/each}
+              </select></td
+            >
+            <td
+              ><label class="container"
+                ><input
+                  bind:checked={parameter.required}
+                  type="checkbox"
+                /><span class="checkmark" /></label
+              ></td
+            >
+            <td
+              ><button
+                class="clickableButtonRemove"
+                on:click={() => removeParameter(index)}>×</button
+              ></td
+            >
+          </tr>
+        {/each}
+      {/if}
+      <tr>
+        <th
+          ><button class="clickableButton" on:click={addParameter}>+</button
+          ></th
+        >
+        <th colspan="2" />
+        <th style="background-color:#ff5555"
+          ><button class="writtenButton" on:click={clear}>Clear</button></th
+        >
+      </tr>
+    </table>
+    <table
+      style="margin-top:20px"
+      class="equalDivide"
+      cellpadding="0"
+      cellspacing="0"
+      width="100%"
+      border-radius="0"
     >
-  </tr>
-</table>
-<table style="margin-top:20px" class="equalDivide" cellpadding="0" cellspacing="0" width="100%" border-radius="0">
-  <tr>
-    <th><button class="export" on:click={exportTS}>Export TS</button></th>
-    <th><button class="export" on:click={exportRust}>Export Rust</button></th>
-    <th><button class="export" on:click={exportDart}>Export Dart</button></th>
-    <th><button class="export" on:click={exportCS}>Export C#</button></th>
-    <th><button class="export" on:click={exportJava}>Export Java</button></th>
+      <tr>
+        <th><button class="export" on:click={exportTS}>Export TS</button></th>
+        <th
+          ><button class="export" on:click={exportRust}>Export Rust</button></th
+        >
+        <th
+          ><button class="export" on:click={exportDart}>Export Dart</button></th
+        >
+        <th><button class="export" on:click={exportCS}>Export C#</button></th>
+        <th
+          ><button class="export" on:click={exportJava}>Export Java</button></th
+        >
 
-    <th><button class="export" on:click={exportModel}>Export UDM</button></th>
-  </tr>
-  <tr>
-    <th colspan="6"><label class="container"><input type="file" accept=".yaml" bind:files /><span
-      class="export"
-    />Import UDM</label></th>
-  </tr>
-</table>
-<br />
-<section class="bottom">
-  <h2>TypeScript</h2>
-  <Highlight language={typescript} code={tsCode} />
-  <h2>Rust</h2>
-  <Highlight language={rustHighlight} code={rustCode} />
-  <h2>Dart</h2>
-  <Highlight language={dartHighlight} code={dartCode} />
-  <h2>C#</h2>
-  <Highlight language={csHighlight} code={csCode} />
-  <h2>Java</h2>
-  <Highlight language={javaHighlight} code={javaCode} />
-  <h2>UDM</h2>
-  <Highlight language={yamlHighlight} code={udmCode} />
-</section>
+        <th
+          ><button class="export" on:click={exportModel}>Export UDM</button></th
+        >
+      </tr>
+      <tr>
+        <th colspan="6"
+          ><label class="container"
+            ><input type="file" accept=".yaml" bind:files /><span
+              class="export"
+            />Import UDM</label
+          ></th
+        >
+      </tr>
+    </table>
+  </div>
+  <section class="bottom" style="overflow: scroll; background-color: #2c2c2c">
+    <div class="code-container">
+      <h2>TypeScript</h2>
+      <Highlight language={typescript} code={tsCode} />
+    </div>
+
+    <div class="code-container">
+      <h2>Rust</h2>
+      <Highlight language={rustHighlight} code={rustCode} />
+    </div>
+
+    <div class="code-container">
+      <h2>Dart</h2>
+      <Highlight language={dartHighlight} code={dartCode} />
+    </div>
+
+    <div class="code-container">
+      <h2>C#</h2>
+      <Highlight language={csHighlight} code={csCode} />
+    </div>
+
+    <div class="code-container">
+      <h2>Java</h2>
+      <Highlight language={javaHighlight} code={javaCode} />
+    </div>
+
+    <div class="code-container">
+      <h2>UDM</h2>
+      <Highlight language={yamlHighlight} code={udmCode} />
+    </div>
+  </section>
+</div>
 
 <style>
-  .equalDivide tr td { width:25%; }
+  .code-container {
+    background-color: black;
+    border-radius: 3pt;
+    padding: 20pt;
+    margin: 20pt;
+  }
+  .equalDivide tr td {
+    width: 25%;
+  }
   .bottom {
     padding: 20px;
   }
@@ -287,7 +352,14 @@
     margin-top: 0px;
     padding-top: 0px;
   }
-  */ 
+  */
+
+  .wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    height: 100vh;
+    overflow: hidden;
+  }
 
   .clickableButton {
     width: 100%;
@@ -437,7 +509,7 @@
   th {
     border: 4px solid #292a30;
     overflow: hidden;
-    text-align:center;
+    text-align: center;
   }
   input {
     margin: auto;
@@ -466,12 +538,35 @@
     font-family: "Rubik", sans-serif;
     background-color: #292a30;
     color: #e0dce4;
-    
   }
   button {
     font-family: "Rubik", sans-serif;
   }
   input {
     font-family: "Rubik", sans-serif;
+  }
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #2c2c2c;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(95, 95, 95);
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  ::-webkit-scrollbar-corner {
+    display: none;
   }
 </style>

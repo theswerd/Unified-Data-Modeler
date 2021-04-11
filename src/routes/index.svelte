@@ -171,6 +171,7 @@ import ts from "../logic/export/ts";
 <input type="file" on:change={uploadFile} accept=".yaml" />
 <button on:click={clear}>Clear</button>
 <style>
+
   .container {
     display: block;
     position: relative;
@@ -217,18 +218,20 @@ import ts from "../logic/export/ts";
     display: block;
   }
 
-  .container .checkmark:after {
-    left: 9px;
-    top: 5px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-    transition-duration: 500ms;
-  }
+.container .checkmark:after {
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  top: 4px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  transition-duration: 500ms;
+}
   table {
     margin: 0 auto;
     border-collapse: collapse;
@@ -243,9 +246,9 @@ import ts from "../logic/export/ts";
     outline: none;
   }
 
-  table td,
-  table th {
-    border: 4px solid #292a30;
+  td ,
+  th  {
+    border: 4px solid #292A30;
     overflow: hidden;
   }
   input {

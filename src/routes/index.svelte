@@ -205,12 +205,15 @@
     >
   </tr>
 </table>
-<table class="equalDivide" cellpadding="0" cellspacing="0" width="100%" border-radius="0">
+<table style="margin-top:20px" class="equalDivide" cellpadding="0" cellspacing="0" width="100%" border-radius="0">
   <tr>
-     <td>Export UDM</td>
-     <td>Export TS</td>
-     <td>Export Dart</td>
-     <td>Export Rust</td>
+     <th>Export TS</th>
+     <th>Export Dart</th>
+     <th>Export Rust</th>
+     <th>Export UDM</th>
+  </tr>
+  <tr>
+    <td colspan="4">Import UDM</td>
   </tr>
 </table>
 <button on:click={exportModel}>Export</button>
@@ -358,10 +361,11 @@
   th {
     border: 4px solid #292a30;
     overflow: hidden;
+    text-align:center;
   }
   input {
     margin: auto;
-    text-align: left;
+    text-align: center;
     padding: 5px;
     border: none;
     align-self: center;
@@ -371,7 +375,7 @@
   }
 
   th {
-    text-align: left;
+    text-align: center;
     padding: 8px;
   }
 

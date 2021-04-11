@@ -208,10 +208,10 @@
 </table>
 <table style="margin-top:20px" class="equalDivide" cellpadding="0" cellspacing="0" width="100%" border-radius="0">
   <tr>
-     <th>Export TS</th>
-     <th>Export Dart</th>
-     <th>Export Rust</th>
-     <th>Export UDM</th>
+     <th class="export">Export TS</th>
+     <th class="export">Export Dart</th>
+     <th class="export">Export Rust</th>
+     <th class="export">Export UDM</th>
   </tr>
   <tr>
     <td colspan="4">Import UDM</td>
@@ -266,6 +266,20 @@
     outline: 0;
   }
   .clickableButton:hover {
+    cursor: pointer;
+    color: #00b518;
+    transition-duration: 500ms;
+  }
+
+  .export {
+    background-color: #2f3239;
+    color: #e0dce4;
+    transition: 500ms;
+  }
+  .export:focus {
+    outline: 0;
+  }
+  .export:hover {
     cursor: pointer;
     color: #00b518;
     transition-duration: 500ms;

@@ -9,13 +9,14 @@
   import type { BaseParameter, Parameter } from "../models/parameter";
   import { flatSyntax, flatMap, syntaxTree } from "../logic/syntax_tree";
   import udmYaml from "../logic/export/udm.yaml";
-import ts from "../logic/export/ts";
+  import ts from "../logic/export/udm.ts";
+  import dart from "../logic/export/udm.dart";
 
   let parameters: Array<Parameter>;
   let modelName: string;
   let socket: Socket;
   let modelNameFromNetwork: boolean = false;
-
+  let files: FileList;
   let parametersFromNetwork: boolean = false;
   onMount(() => {
     console.log("MOUNTED");
@@ -83,9 +84,19 @@ import ts from "../logic/export/ts";
     saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.ts");
   };
 
-  let uploadFile = (files) => {
+  let exportDart = () => {
+    console.log("logggg");
+    var blob = new Blob([dart(modelName, [...parameters])], {
+      type: "text/plain;charset=utf-8",
+    });
+
+    saveAs(blob, modelName.length == 0 ? "mymodel" : modelName + ".udm.dart");
+  };
+
+  $: {
     console.log("FILES", files);
     if (files != undefined && files != null && (files?.length ?? 0) != 0) {
+      console.log("INSIDEEEE")
       files
         .item(0)
         .text()
@@ -93,8 +104,8 @@ import ts from "../logic/export/ts";
           console.log("FILE TEXT", text);
           const doc = yaml.load(text);
           console.log(doc);
-          modelName = doc.name;
-          parameters = (doc.parameters as Array<BaseParameter>).map((base) => {
+          modelName = doc['name'];
+          parameters = (doc['parameters'] as Array<BaseParameter>).map((base) => {
             return {
               name: flatSyntax.find((value) => value.value == base.type).name,
               type: flatSyntax.find((value) => value.value == base.type),
@@ -167,13 +178,14 @@ import ts from "../logic/export/ts";
   <tr>
     <th><button class="clickableButton" on:click={addParameter}>+</button></th>
     <th colspan="2"></th>
-    <th style="background-color:red"><button class="clickableButton" style="background-color:red;font-size:20px;text-align:left" on:click={clear}>Clear</button></th>
+    <th style="background-color:red"><button class="writtenButton" on:click={clear}>Clear</button></th>
   </tr>
 </table>
 <button on:click={exportModel}>Export</button>
 <button on:click={exportTS}>Export TS</button>
+<button on:click={exportDart}>Export Dart</button>
 
-<input type="file" on:change={uploadFile} accept=".yaml" />
+<input type="file" accept=".yaml" bind:files/>
 <button on:click={clear}>Clear</button>
 <style>
 
@@ -185,7 +197,7 @@ import ts from "../logic/export/ts";
     height: 100%;
     border: none;
     background-color:#2f3239;
-    color: white;
+    color: #e0dce4;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 25px;
   }
@@ -201,9 +213,10 @@ import ts from "../logic/export/ts";
     width: 100%;
     height: 100%;
     border: none;
-    background-color:#2f3239;
-    color: red;
-    font-size: 20px;
+    background-color:red;
+    color: #e0dce4;
+    font-size: 16px;
+    font-weight:bold;
   }
   .writtenButton:focus {
     outline: 0;
@@ -275,7 +288,7 @@ import ts from "../logic/export/ts";
   top: 4px;
   width: 5px;
   height: 10px;
-  border: solid white;
+  border: solid #e0dce4;
   border-width: 0 3px 3px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);

@@ -9,7 +9,7 @@
   import type { BaseParameter, Parameter } from "../models/parameter";
   import { flatSyntax, flatMap, syntaxTree } from "../logic/syntax_tree";
   import udmYaml from "../logic/export/udm.yaml";
-  import ts from "../logic/export/ts";
+import ts from "../logic/export/ts";
 
   let parameters: Array<Parameter>;
   let modelName: string;
@@ -160,15 +160,16 @@
             /></label
           ></td
         >
-        <td><button class="removeButton" on:click={() => removeParameter(index)}>×</button></td>
+        <td><button class="clickableButton" on:click={() => removeParameter(index)}>×</button></td>
       </tr>
     {/each}
   {/if}
+  <tr>
+    <th><button class="clickableButton" on:click={addParameter}>+</button></th>
+    <th colspan="2"></th>
+    <th style="background-color:red"><button class="clickableButton" style="background-color:red;font-size:20px;text-align:left" on:click={clear}>Clear</button></th>
+  </tr>
 </table>
-<table>
-  <tr />
-</table>
-<button on:click={addParameter}>Add Parameter</button>
 <button on:click={exportModel}>Export</button>
 <button on:click={exportTS}>Export TS</button>
 
@@ -179,7 +180,7 @@
 .fullsize {
   height: 100%;
 }
-  .removeButton {
+  .clickableButton {
     width: 100%;
     height: 100%;
     border: none;
@@ -188,13 +189,31 @@
     font-family: Arial, Helvetica, sans-serif;
     font-size: 25px;
   }
-  .removeButton:focus {
+  .clickableButton:focus {
     outline: 0;
 
   }
-  .removeButton:hover {
+  .clickableButton:hover {
     cursor: pointer;
   }
+
+  .writtenButton {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color:#2f3239;
+    color: red;
+    font-size: 20px;
+  }
+  .writtenButton:focus {
+    outline: 0;
+
+  }
+  .writtenButton:hover {
+    cursor: pointer;
+  }
+
+
   .container {
     display: block;
     position: relative;

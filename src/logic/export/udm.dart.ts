@@ -4,7 +4,6 @@ import type from "./type_finder";
 import warning from "./warning";
 
 export default (name: string, parameters: Array<Parameter>, withWarning: boolean = true): string => {
-  console.log("PARAMETERS", parameters);
   return (
     (withWarning ? warning+"\n" : "") +
     "class " +

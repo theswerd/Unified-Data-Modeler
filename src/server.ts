@@ -17,8 +17,6 @@ app.use(
   sapper.middleware()
 );
 
-
-
 const httpServer = new HttpServer.Server(app);
 
 const io = new Server(httpServer, {
@@ -26,6 +24,7 @@ const io = new Server(httpServer, {
     origin: "*",
   },
 });
+
 const defaultParameters: Array<Parameter> = [
   {
     name: "price",
@@ -44,16 +43,18 @@ io.on("connection", (socket) => {
   socket.on("parameters", (value) => {
     parameters = value;
     console.log("NEW PARAMETERS", Date.now(), parameters);
-    socket.emit("parameters", parameters);
+    socket.broadcast.emit("parameters", parameters);
   });
 
   socket.on("modelName", (value) => {
     modelName = value;
-    socket.emit("modelName", modelName);
+    socket.broadcast.emit("modelName", modelName);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("DISCONNECTED");
   });
 });
-
-
 
 httpServer.listen(PORT, () => {
   console.log("socket and sapper running");

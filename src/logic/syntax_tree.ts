@@ -14,6 +14,7 @@ export enum Languages {
   TypeScript,
   Rust,
   Dart,
+  CS,
 }
 
 export const syntaxTree: DataType = {
@@ -48,6 +49,10 @@ export const syntaxTree: DataType = {
           language: Languages.TypeScript,
           syntax: "boolean",
         },
+        {
+          language: Languages.CS,
+          syntax: "bool",
+        },
       ],
     },
     {
@@ -66,6 +71,11 @@ export const syntaxTree: DataType = {
           language: Languages.TypeScript,
           syntax: "Array<any>",
         },
+        {
+          language: Languages.CS,
+          syntax: "Object[]",
+        },
+       
       ],
       subTypes: [
         {
@@ -85,6 +95,11 @@ export const syntaxTree: DataType = {
               language: Languages.TypeScript,
               syntax: "Array<string>",
             },
+            {
+              language: Languages.CS,
+              syntax: "string[]",
+            },
+            
           ],
         },
         {
@@ -103,6 +118,10 @@ export const syntaxTree: DataType = {
             {
               language: Languages.TypeScript,
               syntax: "Array<number>",
+            },
+            {
+              language: Languages.CS,
+              syntax: "int[]",
             },
           ],
         },
@@ -125,6 +144,10 @@ export const syntaxTree: DataType = {
                   language: Languages.Rust,
                   syntax: "usize",
                 },
+                {
+                  language: Languages.CS,
+                  syntax: "uint",
+                },
               ],
             },
           ],
@@ -135,6 +158,10 @@ export const syntaxTree: DataType = {
             },
             {
               language: Languages.Dart,
+              syntax: "int",
+            },
+            {
+              language: Languages.CS,
               syntax: "int",
             },
           ],
@@ -153,6 +180,10 @@ export const syntaxTree: DataType = {
           language: Languages.TypeScript,
           syntax: "number",
         },
+        {
+          language: Languages.CS,
+          syntax: "double",
+        },
       ],
     },
   ],
@@ -168,6 +199,10 @@ export const syntaxTree: DataType = {
     {
       language: Languages.Rust,
       syntax: "str",
+    },
+    {
+      language: Languages.CS,
+      syntax: "string",
     },
   ],
 };

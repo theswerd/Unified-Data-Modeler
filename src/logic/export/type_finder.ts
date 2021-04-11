@@ -7,8 +7,6 @@ let type = (
     tree: DataType = syntaxTree,
     pastTypes: Array<DataType> = [],
   ): string | null => {
-    console.log("CURRENT PLACE IN TREE",tree.value);
-    console.log("SEARCHING FOR IN TREE", dataType.value);
   
     let newPastTypes = [tree, ...pastTypes];
     if (dataType.value == tree.value) {
@@ -27,7 +25,6 @@ let type = (
   
   let backwardsSearch = (history: Array<DataType>, language: Languages): string => {
     for (const index in history) {
-      console.log("BACLWARDS HISTORY", type);
       if (
           history[index].languages.some((value) => value.language == language)
       ) {

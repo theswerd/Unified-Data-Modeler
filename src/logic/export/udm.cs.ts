@@ -9,21 +9,21 @@ export default (
   withWarning: boolean = true
 ): string => {
   return (
-    (withWarning ? warning +"\n": "") +
-    "export default interface " +
+    (withWarning ? warning + "\n" : "") +
+    "struct " +
     name +
     " {\n" +
     parameters
       .map(
         (value) =>
-          "  " +
-          value.name.toLowerCase() +
+          "   public " +
+          type(value.type, Languages.CS) +
           (value.required ? "" : "?") +
-          ": " +
-          type(value.type, Languages.TypeScript) +
-          ";"
+          " " +
+          value.name +
+          ";\n"
       )
-      .join("\n") +
-    "\n}"
+      .join("") +
+    "}"
   );
 };
